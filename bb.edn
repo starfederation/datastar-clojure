@@ -1,87 +1,126 @@
-{:paths ["src/main" "src/bb"]
+{:paths ["src/bb"
+         "sdk/src/main"
+         "sdk-adapter-http-kit/src/main/"
+         "sdk-malli-schemas/src/main"
+         "./src/test/core-sdk"
+         "./src/test/malli-schemas"]
+
+ :deps {io.github.noahtheduke/lazytest {:mvn/version "1.8.0"}
+        metosin/malli                  {:mvn/version "0.17.0"}}
+
  :tasks
  {:requires ([tasks :as t])
 
-  -prep (t/prep-libs)
+  dev
+  {:doc "Starts a dev repl. Additional deps aliases can be passed as arguments."
+   :task (t/dev :http-kit :ring-jetty :malli-schemas)}
 
-  dev {:task (t/dev :http-kit :ring-jetty :malli-schemas)}
+  dev:rj9a
+  {:doc "Same as `dev` with ring-jetty replaced with rj9a."
+   :task (t/dev :http-kit :ring-rj9a :malli-schemas)}
 
-  dev:rj9a {:task (t/dev :http-kit :ring-rj9a :malli-schemas)}
+  dev:empty
+  {:doc "Dev repl with no adapters."
+   :task (t/dev :malli-schemas)}
+  
+  dev:bb
+  {:doc "Start a babashka nrepl server. An addr like `localhost:1234` can be passed as argument."
+   :task (t/dev-bb)}
 
-  dev:empty (t/dev :malli-schemas)
+  test:all
+  {:doc "Run all tests once."
+   :task (t/lazytest [:http-kit
+                      :ring-jetty
+                      :malli-schemas
+                      :sdk-brotli]
+                     [:test.paths/core-sdk
+                      :test.paths/malli-schemas
+                      :test.paths/brotli
+                      :test.paths/adapter-ring
+                      :test.paths/adapter-http-kit
+                      :test.paths/adapter-ring-jetty])}
 
-  test:all (t/lazytest [:http-kit
-                        :ring-jetty
-                        :malli-schemas
-                        :sdk-brotli]
-                       [:test.paths/core-sdk
-                        :test.paths/malli-schemas
-                        :test.paths/brotli
-                        :test.paths/adapter-ring
-                        :test.paths/adapter-http-kit
-                        :test.paths/adapter-ring-jetty])
+  test:all-w
+  {:doc "Watch all tests."
+   :task (t/lazytest [:http-kit
+                      :ring-jetty
+                      :malli-schemas
+                      :sdk-brotli]
+                     [:test.paths/core-sdk
+                      :test.paths/malli-schemas
+                      :test.paths/brotli
+                      :test.paths/adapter-ring
+                      :test.paths/adapter-ring-jetty
+                      :test.paths/adapter-http-kit]
+                     "--watch"
+                     "--delay 1000")}
 
-  test:all-w (t/lazytest [:http-kit
-                          :ring-jetty
-                          :malli-schemas
-                          :sdk-brotli]
-                         [:test.paths/core-sdk
-                          :test.paths/malli-schemas
-                          :test.paths/brotli
-                          :test.paths/adapter-ring
-                          :test.paths/adapter-ring-jetty
-                          :test.paths/adapter-http-kit]
-                         "--watch"
-                         "--delay 1000")
+  test:rj9a
+  {:doc "Same as `test:all` with ring-jetty replaced by rj9a."
+   :task (t/lazytest [:http-kit
+                      :ring-rj9a]
+                     [:test.paths/core-sdk
+                      :test.paths/adapter-ring
+                      :test.paths/adapter-rj9a])}
 
-  test:rj9a (t/lazytest [:http-kit
-                         :ring-rj9a]
-                        [:test.paths/core-sdk
-                         :test.paths/adapter-ring
-                         :test.paths/adapter-rj9a])
+  test:bb
+  {:doc "Run core unit tests with babashka."
+   :task (t/bb-lazytest [:test.paths/core-sdk
+                         :test.paths/malli-schemas])}
 
-  jar:sdk {:doc  "Build jar for the common sdk"
-           :task (t/lib-jar! t/sdk-dir)}
+  jar:sdk
+  {:doc  "Build jar for the common sdk"
+   :task (t/lib-jar! t/sdk-dir)}
 
-  jar:sdk-adapter-ring {:doc  "Build jar for the adapter-ring"
-                        :task (t/lib-jar! t/sdk-adapter-ring-dir)}
+  jar:sdk-adapter-ring
+  {:doc  "Build jar for the adapter-ring"
+   :task (t/lib-jar! t/sdk-adapter-ring-dir)}
 
-  jar:sdk-adapter-http-kit {:doc  "Build jar for the adapter-http-kit"
-                            :task (t/lib-jar! t/sdk-adapter-http-kit-dir)}
+  jar:sdk-adapter-http-kit
+  {:doc  "Build jar for the adapter-http-kit"
+   :task (t/lib-jar! t/sdk-adapter-http-kit-dir)}
 
-  jar:sdk-brotli {:doc  "Build jar for the Brotli library"
-                  :task (t/lib-jar! t/sdk-brotli-dir)}
+  jar:sdk-brotli
+  {:doc  "Build jar for the Brotli library"
+   :task (t/lib-jar! t/sdk-brotli-dir)}
 
-  jar:sdk-malli-schemas {:doc  "Build jar for the malli-schemas"
-                         :task (t/lib-jar! t/sdk-malli-schemas-dir)}
+  jar:sdk-malli-schemas
+  {:doc  "Build jar for the malli-schemas"
+   :task (t/lib-jar! t/sdk-malli-schemas-dir)}
 
-  jar:all {:doc     "Build the jar for all the libs"
-           :depends [clean
-                     jar:sdk
-                     jar:sdk-adapter-ring
-                     jar:sdk-adapter-http-kit
-                     jar:sdk-brotli
-                     jar:sdk-malli-schemas]}
+  jar:all
+  {:doc     "Build the jar for all the libs"
+   :depends [clean
+             jar:sdk
+             jar:sdk-adapter-ring
+             jar:sdk-adapter-http-kit
+             jar:sdk-brotli
+             jar:sdk-malli-schemas]}
 
-  install:all {:doc "Install all libraries"
-               :depends [clean]
-               :task (doseq [dir t/sdk-lib-dirs]
-                       (t/lib-install! dir))}
+  install:all
+  {:doc "Install all libraries"
+   :depends [clean]
+   :task (doseq [dir t/sdk-lib-dirs]
+           (t/lib-install! dir))}
 
-  clean {:doc  "Clean build artifacts"
-         :task (doseq [dir t/sdk-lib-dirs]
-                 (clojure {:dir dir} "-T:build clean"))}
+  clean
+  {:doc  "Clean build artifacts"
+   :task (doseq [dir t/sdk-lib-dirs]
+           (clojure {:dir dir} "-T:build clean"))}
 
-  set-version {:doc  "Set the version in all libs"
-               :task (doseq [dir t/sdk-lib-dirs]
-                       (t/lib-set-version! dir (first *command-line-args*)))}
+  set-version
+  {:doc  "Set the version in all libs"
+   :task (doseq [dir t/sdk-lib-dirs]
+           (t/lib-set-version! dir (first *command-line-args*)))}
 
-  bump-version {:doc  "Bump the version component in all libs. First argument must be one of: major, minor, patch"
-                :task (doseq [dir sdk-lib-dirs]
-                        (let [component (first *command-line-args*)]
-                          (t/lib-bump! dir component)))}
+  bump-version
+  {:doc  "Bump the version component in all libs. First argument must be one of: major, minor, patch"
+   :task (doseq [dir sdk-lib-dirs]
+           (let [component (first *command-line-args*)]
+             (t/lib-bump! dir component)))}
 
-  publish:all {:doc     "Publish the clojure sdk libs to clojars"
-               :depends [jar:all]
-               :task    (doseq [dir sdk-lib-dirs]
-                          (t/lib-publish! dir))}}}
+  publish:all
+  {:doc     "Publish the clojure sdk libs to clojars"
+   :depends [jar:all]
+   :task    (doseq [dir sdk-lib-dirs]
+              (t/lib-publish! dir))}}}

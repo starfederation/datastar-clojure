@@ -1,12 +1,10 @@
-(ns examples.animation-gzip.rendering
+(ns bb-example.animation.rendering
   (:require
-    [clojure.java.io :as io]
-    [clojure.math :as math]
-    [dev.onionpancakes.chassis.core :as h]
-    [dev.onionpancakes.chassis.compiler :as hc]
-    [dom-top.core :as dt]
-    [examples.common :as c]
-    [examples.animation-gzip.animation :as animation]
+    [bb-example.animation.core :as animation]
+    [bb-example.common         :as c]
+    [clojure.java.io           :as io]
+    [clojure.math              :as math]
+    [hiccup2.core              :as h]
     [starfederation.datastar.clojure.api :as d*]))
 
 ;; -----------------------------------------------------------------------------
@@ -32,28 +30,27 @@
     (color-level delta)))
 
 
-#_ {:clj-kondo/ignore true}
 (defn cell-color [state pos]
-  (let [general-clock (:clock state)] ;; TODO: don't need the clock
-    (dt/loopr [r 255
-               g 255
-               b 255]
-              [ping (:pings state)]
-      (let [intensity (compute-intensity ping pos)]
-        (if (pos? intensity)
-          (case (:color ping)
-            :r (recur r (modify-color g intensity) (modify-color b intensity))
-            :g (recur (modify-color r intensity) g (modify-color b intensity))
-            :b (recur (modify-color r intensity) (modify-color g intensity) b))
-          (recur r g b)))
-      [r g b])))
-
+  (let [!r (volatile! 255)
+        !g (volatile! 255)
+        !b (volatile! 255)]
+      (doseq [ping (:pings state)]
+        (let [intensity (compute-intensity ping pos)]
+          (when (pos? intensity)
+            (case (:color ping)
+              :r (do (vswap! !g modify-color intensity)
+                     (vswap! !b modify-color intensity))
+              :g (do (vswap! !r modify-color intensity)
+                     (vswap! !b modify-color intensity))
+              :b (do (vswap! !r modify-color intensity)
+                     (vswap! !g modify-color intensity))))))
+      [@!r @!g @!b]))
 
 
 ;; -----------------------------------------------------------------------------
 ;; Page generation
 ;; -----------------------------------------------------------------------------
-(def css (slurp (io/resource "examples/animation_gzip/style.css")))
+(def css (slurp (io/resource "bb_example/animation/style.css")))
 
 (defn rgb [r g b]
   (str "rgb(" r ", " g ", " b")"))
@@ -70,7 +67,7 @@
 (defn pseudo-pixel [state x y]
   (let [c  (cell-color state (animation/point x y))
         id (str "px-" x "-" y)]
-    (hc/compile
+    (h/html
       [:div.pseudo-pixel {:style (cell-style (apply rgb c))
                           :id id}
        " "])))
@@ -80,29 +77,27 @@
     (str "grid-template-columns: repeat(" columns ", 1fr)")))
 
 
-#_ {:clj-kondo/ignore true}
 (defn pseudo-canvas [state]
   (let [size (:size state)
         rows (:x size)
-        columns (:y size)]
-    (dt/loopr
-      [pc (transient [:div.pseudo-canvas {:style (grid-style state)
-                                          :data-on-click on-click}])]
-      [r (range 1 (inc rows))
-       c (range 1 (inc columns))]
-      (recur (conj! pc (pseudo-pixel state r c)))
-      (persistent! pc))))
+        columns (:y size)
+        !pc (volatile! (transient [:div.pseudo-canvas {:style (grid-style state)
+                                                       :data-on-click on-click}]))]
+    (doseq [r (range 1 (inc rows))
+            c (range 1 (inc columns))]
+      (vswap! !pc conj! (pseudo-pixel state r c)))
+    (persistent! @!pc)))
 
 
 (defn left-pane [state]
-  (hc/compile
+  (h/html
     [:div#left-pane
      (pseudo-canvas state)]))
 
 
 
 (defn controls [state]
-  (hc/compile
+  (h/html
     [:div
      [:h3 "Controls"]
      [:ul.h-list
@@ -111,9 +106,9 @@
       [:li [:button {:data-on-click (d*/sse-get "/random-10")} "add 10"]]
       [:li [:button {:data-on-click (d*/sse-get "/step1")} "step1"]]
       (if (:animator state)
-        (hc/compile
+        (h/html
           [:li [:button {:data-on-click (d*/sse-get "/pause")} "pause"]])
-        (hc/compile
+        (h/html
           [:li [:button {:data-on-click (d*/sse-get "/play")} "play"]]))]
 
      [:ul.h-list {:data-signals-rows    (-> state :size :x)
@@ -127,7 +122,7 @@
 
 
 (defn log-pane [state]
-  (hc/compile
+  (h/html
     [:div#log-pane.stack
      [:h3 "State"]
      [:div.stack
@@ -147,7 +142,7 @@
              [:th "traveled"] [:th "pos"]]]
            [:tbody
             (for [ping pings]
-              (hc/compile
+              (h/html
                 [:tr
                  [:td (:clock ping)]
                  [:td (:color ping)]
@@ -159,15 +154,17 @@
 
 
 (defn right-pane [state]
-  [:div#right-pane.stack.center
-   (controls state)
-   (log-pane state)])
+  (h/html
+    [:div#right-pane.stack.center
+     (controls state)
+     (log-pane state)]))
 
 
 (defn content [state]
-  [:div#main-content.center
-   (left-pane state)
-   (right-pane state)])
+  (h/html
+    [:div#main-content.center
+     (left-pane state)
+     (right-pane state)]))
 
 
 (defn page [state]
@@ -175,9 +172,9 @@
     (c/page-scaffold
       [:div {:data-on-load (d*/sse-get "/updates")}
        [:style (h/raw css)]
-       [:h2.center "lets get something fun going"]
+       [:h2.center "Babashka Test"]
        (content state)])))
 
 
 (defn render-content [state]
-  (h/html (content state)))
+  (str (h/html (content state))))

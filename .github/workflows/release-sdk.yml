@@ -52,8 +52,11 @@ jobs:
           key: cljdeps-${{ hashFiles('**/deps.edn') }}
           restore-keys: cljdeps-
 
-      - name: Run test suite
+      - name: Run Clojure test suite
         run: bb test:all
+
+      - name: Run Babashka test suite
+        run: bb test:bb
 
       - name: Build jar artifacts
         run: bb jar:all

@@ -5,8 +5,9 @@
     [starfederation.datastar.clojure.utils :as u]
     [org.httpkit.server :as hk-server])
   (:import
-    [java.util.concurrent.locks ReentrantLock]
-    [java.io ByteArrayOutputStream Closeable]))
+    java.lang.Exception
+    [java.io ByteArrayOutputStream Closeable]
+    [java.util.concurrent.locks ReentrantLock]))
 
 
 (def basic-profile
@@ -93,9 +94,10 @@
 
   (sse-gen? [_] true)
 
-  Closeable
-  (close [this]
-    (p/close-sse! this)))
+  #?@(:bb  []
+      :clj [Closeable
+            (close [this]
+              (p/close-sse! this))]))
 
 
 (defn ->sse-gen

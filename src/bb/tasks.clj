@@ -4,20 +4,61 @@
     [clojure.string :as string]
     [clojure.edn :as edn]))
 
+;; -----------------------------------------------------------------------------
+;; Clojure cli invocation helpers
+;; -----------------------------------------------------------------------------
+(defn aliases->str [aliases]
+  (->> aliases
+       (map str)
+       (string/join "")))
 
 
-(defn prep-libs []
-  (t/clojure
-    "-X:deps prep"))
+(defn format-clj-cli-args [{:keys [X M main-ns args-str]}]
+  (string/join " "
+    (cond-> []
+      X        (conj (str "-X" (aliases->str X)))
+      M        (conj (str "-M" (aliases->str M)))
+      main-ns  (conj "-m" main-ns)
+      args-str (conj args-str))))
 
-(defn classpath [aliases]
-  (apply str "-M" aliases))
 
-(defn base-cli-invocation [aliases main]
-  (str (classpath aliases)
-       " -m "
-       main))
+(defn print-cli [{:keys [cli X M main-ns args-str] :as args}]
+  (println "--------------------------------")
+  (println "Running " cli)
+  (println "--------------------------------")
+  (when X        (println "X:       " X))
+  (when M        (println "M:       " M))
+  (when main-ns  (println "main ns: " main-ns))
+  (when args-str (println "args:    " args-str))
+  (println "--------------------------------")
+  args)
 
+
+(defn clojure
+  {:arglists '([{:keys [X M main-ns args-str]}])}
+  [{:as args}]
+  (-> args
+      (assoc :cli "clojure")
+      print-cli
+      format-clj-cli-args
+      (t/clojure)))
+
+
+(defn bb
+  {:arglists '([{:keys [main-ns args-str]}])}
+  [{:as args}]
+  (-> args
+      (dissoc :M :X)
+      (assoc :cli "bb")
+      print-cli
+      format-clj-cli-args
+      (->> (str "bb ")
+           t/shell)))
+
+
+;; -----------------------------------------------------------------------------
+;; Starting repls
+;; -----------------------------------------------------------------------------
 (def dev-aliases
   [:test
    :repl
@@ -34,10 +75,15 @@
   (let [aliases (-> dev-aliases
                     (into aliases)
                     (into (map arg->kw *command-line-args*)))]
-    (println "Starting Dev repl with aliases: " aliases)
-    (t/clojure
-      (str (base-cli-invocation aliases 'nrepl.cmdline)
-           " --middleware \"[cider.nrepl/cider-middleware]\""))))
+    (clojure {:M aliases
+              :main-ns 'nrepl.cmdline
+              :args-str " --middleware \"[cider.nrepl/cider-middleware]\""})))
+
+(defn dev-bb [& [addr]]
+  (let [addr (or addr (first *command-line-args*))]
+    (bb {:args-str (str " nrepl-server"
+                        (when addr (str " " addr)))})))
+
 
 
 ;; -----------------------------------------------------------------------------
@@ -53,25 +99,32 @@
 (def all-aliases (delay (deps-aliases)))
 
 
-(defn named-paths->dirs [as]
-  (->> as
+(defn named-paths->dirs [named-paths]
+  (->> named-paths
        (mapcat #(get @all-aliases %))
-       (map #(str "-d " %))))
+       (mapv #(str "-d " %))))
 
 
-(defn lazytest-invocation [aliases named-paths args]
-  (string/join " "
-    (concat [(base-cli-invocation aliases 'lazytest.main)]
-            (named-paths->dirs named-paths)
-            args
-            *command-line-args*)))
+(defn lazytest-invocation [{:keys [aliases named-paths args]}]
+  {:M (into [:test] aliases)
+   :main-ns 'lazytest.main
+   :args-str (string/join " "
+                 (conj (named-paths->dirs named-paths)
+                       args))})
 
 
 (defn lazytest [aliases paths-aliases & args]
-  (t/clojure
-    (lazytest-invocation (into [:test] aliases)
-                         paths-aliases
-                         args)))
+  (-> {:aliases aliases
+       :named-paths paths-aliases
+       :args args}
+      lazytest-invocation
+      clojure))
+
+
+(defn bb-lazytest [named-paths]
+  (-> {:named-paths named-paths}
+      lazytest-invocation
+      bb))
 
 
 ;; -----------------------------------------------------------------------------

@@ -5,8 +5,9 @@
     [starfederation.datastar.clojure.protocols :as p]
     [starfederation.datastar.clojure.utils :as u])
  (:import
-    [java.util.concurrent.locks ReentrantLock]
-    [java.io Closeable]))
+    #?(:clj [java.io Closeable])
+    java.lang.StringBuilder
+    [java.util.concurrent.locks ReentrantLock]))
 
 
 
@@ -46,9 +47,10 @@
 
   (sse-gen? [_] true)
 
-  Closeable
-  (close [this]
-    (p/close-sse! this)))
+  #?@(:bb  []
+      :clj [Closeable
+            (close [this]
+              (p/close-sse! this))]))
 
 
 (defn ->sse-response
