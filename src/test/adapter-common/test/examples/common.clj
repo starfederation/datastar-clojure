@@ -4,7 +4,6 @@
     [dev.onionpancakes.chassis.compiler :as hc]
     [ring.middleware.params :as rmp]
     [ring.middleware.multipart-params :as rmpp]
-    [ring.util.response :as rur]
     [reitit.ring :as rr]
     [starfederation.datastar.clojure.consts :as consts]))
 
@@ -20,21 +19,8 @@
        "/bundles/datastar.js"))
 
 
-(def datastar-response
-  (-> (slurp "../../bundles/datastar.js")
-      rur/response
-      (rur/content-type "text/javascript")))
-
-
-(def datastar-route
-  ["/datastar.js"
-   (fn ([_req]                         datastar-response)
-       ([_req respond _raise] (respond datastar-response)))])
-
-
-
 (def datastar
-  (script "module" "/datastar.js"))
+  (script "module" cdn-url))
 
 
 (defn scaffold [content & {:as _}]

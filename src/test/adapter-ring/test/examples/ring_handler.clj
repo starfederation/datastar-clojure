@@ -47,8 +47,7 @@
 
 (def router
   (rr/router
-    [common/datastar-route
-     counter-routes
+    [counter-routes
      form-routes]))
 
 
