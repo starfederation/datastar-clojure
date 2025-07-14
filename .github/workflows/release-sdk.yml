@@ -81,14 +81,14 @@ jobs:
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
         with:
-          name: adapter-ring.jar
+          name: malli-schemas.jar
           path: sdk-malli-schemas/target/*.jar
           if-no-files-found: error
           compression-level: 0
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
         with:
-          name: adapter-ring.jar
+          name: brotli.jar
           path: sdk-brotli/target/*.jar
           if-no-files-found: error
           compression-level: 0
