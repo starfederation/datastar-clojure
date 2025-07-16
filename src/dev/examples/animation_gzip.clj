@@ -4,7 +4,6 @@
     [examples.animation-gzip.handlers :as handlers]
     [examples.animation-gzip.rendering :as rendering]
     [examples.animation-gzip.state :as state]
-    [examples.common :as c]
     [examples.utils :as u]
     [reitit.ring :as rr]
     [reitit.ring.middleware.exception :as reitit-exception]
@@ -13,7 +12,6 @@
     [starfederation.datastar.clojure.adapter.http-kit-schemas]
     [starfederation.datastar.clojure.adapter.ring :as ring-gen]
     [starfederation.datastar.clojure.adapter.ring-schemas]
-    [starfederation.datastar.clojure.api :as d*]
     [starfederation.datastar.clojure.api-schemas]
     [starfederation.datastar.clojure.brotli :as brotli]))
 
@@ -34,8 +32,7 @@
    ["/pause"     handlers/pause-handler]
    ["/updates"   (handlers/->updates-handler ->sse-response opts)]
    ["/refresh"   handlers/refresh-handler]
-   ["/resize"    handlers/resize-handler]
-   c/datastar-route])
+   ["/resize"    handlers/resize-handler]])
 
 
 (defn ->router [->sse-handler opts]

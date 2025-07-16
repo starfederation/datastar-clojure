@@ -34,19 +34,18 @@
 
 #_ {:clj-kondo/ignore true}
 (defn cell-color [state pos]
-  (let [general-clock (:clock state)] ;; TODO: don't need the clock
-    (dt/loopr [r 255
-               g 255
-               b 255]
-              [ping (:pings state)]
-      (let [intensity (compute-intensity ping pos)]
-        (if (pos? intensity)
-          (case (:color ping)
-            :r (recur r (modify-color g intensity) (modify-color b intensity))
-            :g (recur (modify-color r intensity) g (modify-color b intensity))
-            :b (recur (modify-color r intensity) (modify-color g intensity) b))
-          (recur r g b)))
-      [r g b])))
+  (dt/loopr [r 255
+             g 255
+             b 255]
+            [ping (:pings state)]
+    (let [intensity (compute-intensity ping pos)]
+      (if (pos? intensity)
+        (case (:color ping)
+          :r (recur r (modify-color g intensity) (modify-color b intensity))
+          :g (recur (modify-color r intensity) g (modify-color b intensity))
+          :b (recur (modify-color r intensity) (modify-color g intensity) b))
+        (recur r g b)))
+    [r g b]))
 
 
 

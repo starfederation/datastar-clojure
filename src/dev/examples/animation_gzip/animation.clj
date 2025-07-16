@@ -44,7 +44,7 @@
   {:animator nil
    :animation-tick 100
    :clock 0
-   :size {:x 10 :y 10}
+   :size {:x 50 :y 50}
    :color :r
    :pings []})
 
