@@ -4,7 +4,6 @@
     [examples.animation-gzip.handlers  :as handlers]
     [examples.animation-gzip.rendering :as rendering]
     [examples.animation-gzip.state :as state]
-    [examples.common :as c]
     [examples.utils :as u]
     [reitit.ring :as rr]
     [reitit.ring.middleware.exception :as reitit-exception]
@@ -35,8 +34,7 @@
    ["/updates"   {:handler (handlers/->updates-handler ->sse-response opts)
                   :middleware [[hk-gen/start-responding-middleware]]}]
    ["/refresh"   handlers/refresh-handler]
-   ["/resize"    handlers/resize-handler]
-   c/datastar-route])
+   ["/resize"    handlers/resize-handler]])
 
 
 (defn ->router [->sse-handler opts]

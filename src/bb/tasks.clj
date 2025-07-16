@@ -17,7 +17,7 @@
   (string/join " "
     (cond-> []
       X        (conj (str "-X" (aliases->str X)))
-      M        (conj (str "-M" (aliases->str M)))
+      true     (conj (str "-M" (when M (aliases->str M))))
       main-ns  (conj "-m" main-ns)
       args-str (conj args-str))))
 

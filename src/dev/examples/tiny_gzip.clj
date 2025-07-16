@@ -2,7 +2,6 @@
   (:require
     [examples.common :as c]
     [examples.utils :as u]
-    [examples.animation-gzip.brotli :as brotli]
     [dev.onionpancakes.chassis.core :as h]
     [ring.util.response :as ruresp]
     [reitit.ring :as rr]
@@ -96,8 +95,7 @@
     [["/" {:handler home}]
      ["/change-val" {:handler (->change-val ->sse-response)
                      :middleware [reitit-params/parameters-middleware]}]
-     ["/updates" {:handler (->updates ->sse-response opts)}]
-     c/datastar-route]))
+     ["/updates" {:handler (->updates ->sse-response opts)}]]))
 
 (def default-handler (rr/create-default-handler))
 

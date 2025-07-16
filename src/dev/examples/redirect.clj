@@ -50,8 +50,7 @@
 (def router (rr/router
               [["/" {:handler home}]
                ["/guide" {:handler guide}]
-               ["/redirect-me" {:handler redirect-handler}]
-               c/datastar-route]))
+               ["/redirect-me" {:handler redirect-handler}]]))
 
 
 (def default-handler (rr/create-default-handler))

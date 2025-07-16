@@ -70,8 +70,7 @@
 (def router (rr/router
               [["/" {:handler #'home}]
                ["/add-fragment" {:handler #'add-element}]
-               ["/remove-fragment/:id" {:handler #'remove-element}]
-               c/datastar-route]))
+               ["/remove-fragment/:id" {:handler #'remove-element}]]))
 
 
 (def default-handler (rr/create-default-handler))

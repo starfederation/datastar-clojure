@@ -35,8 +35,7 @@
 
 (def router (rr/router
               [["/" {:handler home}]
-               ["/endpoint" {:handler endpoint}]
-               c/datastar-route]))
+               ["/endpoint" {:handler endpoint}]]))
 
 
 (def default-handler (rr/create-default-handler))

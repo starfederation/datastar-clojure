@@ -5,7 +5,7 @@
     [ring.middleware.params :as rmp]
     [ring.middleware.multipart-params :as rmpp]
     [reitit.ring :as rr]
-    [starfederation.datastar.clojure.consts :as consts]))
+    [starfederation.datastar.clojure.api :as d*]))
 
 
 
@@ -13,14 +13,8 @@
   [:script {:type type :src src}])
 
 
-(def cdn-url
-  (str "https://cdn.jsdelivr.net/gh/starfederation/datastar@"
-       consts/version
-       "/bundles/datastar.js"))
-
-
 (def datastar
-  (script "module" cdn-url))
+  (script "module" d*/CDN-url))
 
 
 (defn scaffold [content & {:as _}]
