@@ -47,6 +47,7 @@ In the SDK code proper `sdk/clojure`:
 - `bb run test:all`: run all test for the SDK, the Http-kit adapter and the
   ring adapter using ring-jetty.
 - `bb run test:rj9a`: run all test for the SDK and the ring adapter using rj9a.
+- `bb run test:bb`: run unit tests for the SDK in Babashka.
 
 ## Release
 

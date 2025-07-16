@@ -6,7 +6,7 @@ implement 1 protocol. If you wanna be more in line with the provided adapters
 there are more conventions to follow.
 
 Also, for the library as a whole we try to stay close to the
-[SDK's design document](/sdk/README.md) used for all SDKs.
+[SDKs' design document](https://github.com/starfederation/datastar/blob/develop/sdk/README.md) used for all SDKs.
 
 ## Implementing the `SSEGenerator` protocol
 

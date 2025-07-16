@@ -16,7 +16,7 @@ There currently are adapter implementations for:
 - [http-kit](https://github.com/http-kit/http-kit)
 
 If you want to roll your own adapter implementation, see
-[implementing-adapters](/sdk/clojure/doc/implementing-adapters.md).
+[implementing-adapters](/doc/implementing-adapters.md).
 
 ## Installation
 
@@ -29,6 +29,48 @@ To your `deps.edn` file you can add the following coordinates:
 | ring          | [![](https://clojars.org/dev.data-star.clojure/latest-version.svg)](https://clojars.org/dev.data-star.clojure/ring)          |
 | brotli        | [![](https://clojars.org/dev.data-star.clojure/latest-version.svg)](https://clojars.org/dev.data-star.clojure/brotli)        |
 | malli-schemas | [![](https://clojars.org/dev.data-star.clojure/latest-version.svg)](https://clojars.org/dev.data-star.clojure/malli-schemas) |
+
+Or via git deps:
+
+- SDK
+
+```clojure
+datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
+              :git/sha "LATEST_SHA"
+              :deps/root "sdk/"}}
+```
+
+- http-kit
+
+```clojure
+datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
+              :git/sha "LATEST_SHA"
+              :deps/root "sdk-adapter-http-kit/"}}
+```
+
+- ring
+
+```clojure
+datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
+              :git/sha "LATEST_SHA"
+              :deps/root "sdk-adapter-ring/"}}
+```
+
+- brotli
+
+```clojure
+datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
+              :git/sha "LATEST_SHA"
+              :deps/root "sdk-brotli/"}}
+```
+
+- malli-schemas
+
+```clojure
+datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
+              :git/sha "LATEST_SHA"
+              :deps/root "sdk-malli-schemas/"}}
+```
 
 Notes:
 
