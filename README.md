@@ -43,38 +43,38 @@ datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
 - http-kit
 
 ```clojure
-datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
-              :git/sha "LATEST_SHA"
-              :deps/root "sdk-adapter-http-kit/"}}
+datastar/http-kit {:git/url "https://github.com/starfederation/datastar-clojure"
+                   :git/sha "LATEST_SHA"
+                   :deps/root "sdk-adapter-http-kit/"}}
 ```
 
 - ring
 
 ```clojure
-datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
-              :git/sha "LATEST_SHA"
-              :deps/root "sdk-adapter-ring/"}}
+datastar/ring {:git/url "https://github.com/starfederation/datastar-clojure"
+               :git/sha "LATEST_SHA"
+               :deps/root "sdk-adapter-ring/"}}
 ```
 
 - brotli
 
 ```clojure
-datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
-              :git/sha "LATEST_SHA"
-              :deps/root "sdk-brotli/"}}
+datastar/brotli {:git/url "https://github.com/starfederation/datastar-clojure"
+                 :git/sha "LATEST_SHA"
+                 :deps/root "sdk-brotli/"}}
 ```
 
 - malli-schemas
 
 ```clojure
-datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
-              :git/sha "LATEST_SHA"
-              :deps/root "sdk-malli-schemas/"}}
+datastar/malli-schemas {:git/url "https://github.com/starfederation/datastar-clojure"
+                        :git/sha "LATEST_SHA"
+                        :deps/root "sdk-malli-schemas/"}}
 ```
 
 Notes:
 
-- You need the sdk and either the http-kit or the ring library to get started.
+- You need the SDK and either the http-kit or the ring library to get started.
 - The ring library works with ring compliant adapters (adapter using the
   `ring.core.protocols/StreamableResponseBody`)
 - Currently the brotli library works only with http-kit
