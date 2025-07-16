@@ -1,12 +1,12 @@
 (ns starfederation.datastar.clojure.sdk-test.core
   (:require
-    [charred.api :as charred]
-    [clojure.set :as set]
-    [reitit.ring.middleware.parameters :as rrm-params]
-    [reitit.ring.middleware.multipart :as rrm-multi-params]
-    [reitit.ring :as rr]
+    [charred.api                                  :as charred]
+    [clojure.set                                  :as set]
+    [reitit.ring.middleware.parameters            :as rrm-params]
+    [reitit.ring.middleware.multipart             :as rrm-multi-params]
+    [reitit.ring                                  :as rr]
     [starfederation.datastar.clojure.adapter.ring :refer [->sse-response on-open]]
-    [starfederation.datastar.clojure.api :as d*]))
+    [starfederation.datastar.clojure.api          :as d*]))
 
 ;; -----------------------------------------------------------------------------
 ;; JSON / Datastar signals utils
@@ -42,7 +42,7 @@
 
    ;; patch elements
    "selector"          d*/selector
-   "patchMode"         d*/patch-mode
+   "mode"         d*/patch-mode
    "useViewTransition" d*/use-view-transition
 
    ;; patch signals
@@ -78,10 +78,15 @@
   (let [signals (-> (get event "signals")
                     (->> (into (sorted-map))) ;; for the purpose of the test, keys need to be ordered
                     (charred/write-json-str))
+
+        signals-raw (get event "signals-raw")
+
+        signals-r (if signals-raw signals-raw signals)
+
         opts (-> event
                  (select-keys options)
                  (set/rename-keys str->datastar-opt))]
-    (d*/patch-signals! sse signals opts)))
+    (d*/patch-signals! sse signals-r opts)))
 
 
 (defn remove-signals! [sse event]

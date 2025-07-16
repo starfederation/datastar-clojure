@@ -22,9 +22,11 @@
       args-str (conj args-str))))
 
 
-(defn print-cli [{:keys [cli X M main-ns args-str] :as args}]
+(defn print-cli [{:keys [cli X M main-ns args-str dir] :as args}]
   (println "--------------------------------")
   (println "Running " cli)
+  (when dir
+    (println "in dir: " dir))
   (println "--------------------------------")
   (when X        (println "X:       " X))
   (when M        (println "M:       " M))
@@ -35,13 +37,15 @@
 
 
 (defn clojure
-  {:arglists '([{:keys [X M main-ns args-str]}])}
+  {:arglists '([{:keys [X M main-ns args-str dir]}])}
   [{:as args}]
-  (-> args
-      (assoc :cli "clojure")
-      print-cli
-      format-clj-cli-args
-      (t/clojure)))
+  (let [invocation (-> args
+                       (assoc :cli "clojure")
+                       print-cli
+                       format-clj-cli-args)]
+    (if-let [dir (:dir args)]
+      (t/clojure {:dir dir} invocation)
+      (t/clojure  invocation))))
 
 
 (defn bb
@@ -126,6 +130,9 @@
       lazytest-invocation
       bb))
 
+(defn start-test-server []
+  (clojure {:dir "sdk-tests"
+            :main-ns 'starfederation.datastar.clojure.sdk-test.main}))
 
 ;; -----------------------------------------------------------------------------
 ;; Build tasks

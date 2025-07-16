@@ -10,7 +10,7 @@
 (defonce !jetty-server (atom nil))
 
 
-(def default-server-opts {:port 8080
+(def default-server-opts {:port 7331
                           :join? false})
 
 (defn start! [handler & {:as opts}]

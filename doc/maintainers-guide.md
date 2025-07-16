@@ -2,19 +2,12 @@
 
 ## Directory structure
 
-In the whole Datastar project:
-
-- `examples/clojure`
-- `site/static/code_snippets/*.clojuresnippet`
-- `site/static/going_deeper/*.clojuresnippet`
-- `site/static/how_tos/*.clojuresnippet`
-
-In the SDK code proper `sdk/clojure`:
-
 - `sdk`: the source folder for the main SDK
-- `adapter-*`: source folders for adapter specific code
-- `malli-schemas`: self explanatory...
+- `sdk-adapter-*`: source folders for adapter specific code
+- `sdk-malli-schemas`: self explanatory...
+- `sdk-brotli`: brotli write profiles
 - `src/bb`: tasks used run a repl, tests...
+- `src/bb-example`: bb examples
 - `src/dev`: dev utils, examples
 - `src/test`: centralized tests for all the libraries
 - `test-resources`: self explanatory
@@ -37,6 +30,8 @@ In the SDK code proper `sdk/clojure`:
   ring-jetty and Http-kit on the classpath
 - `bb run dev:rj9a`: same as basic dev task expect for ring-jetty being replaced
   with rj9a.
+- `bb run dev:bb`: start a bb repl with the core SDK, http-kit adapter and
+  malli-schemas in the classpath.
 
 > [!note]
 > You can add additional deps aliases when calling these tasks:
@@ -48,6 +43,8 @@ In the SDK code proper `sdk/clojure`:
   ring adapter using ring-jetty.
 - `bb run test:rj9a`: run all test for the SDK and the ring adapter using rj9a.
 - `bb run test:bb`: run unit tests for the SDK in Babashka.
+- `bb run test:SDK-common`: start the server used to run the
+  [SDKs' common tests](https://github.com/starfederation/datastar/tree/develop/sdk/tests).
 
 ## Release
 
@@ -75,11 +72,9 @@ Triggering a deployment to clojars is a manual process. A Datastar core contribu
 ### Running tests
 
 - for the unit and smoke tests see the bb tasks.
-- for the generic bash SDK tests
-  1. go to `sdk/clojure/sdk-tests/`
-  2. run `clojure -M -m starfederation.datastar.clojure.sdk-test.main`
-  3. go to `sdk/test/`
-  4. run `./test-all.sh localhost:8080`
+- for the generic bash SDK tests:
+  1. Start the test server with `bb run test:sdk-common`
+  2. Run `go run github.com/starfederation/datastar/sdk/tests/cmd/datastar-sdk-tests@latest`
 
 ### webdriver config
 

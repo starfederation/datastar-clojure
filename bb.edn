@@ -67,6 +67,11 @@
   {:doc "Run core unit tests with babashka."
    :task (t/bb-lazytest [:test.paths/core-sdk
                          :test.paths/malli-schemas])}
+  
+  test:sdk-common
+  {:doc "Run the server used for the SDKs' common tests."
+   :task (t/start-test-server)}
+
 
   jar:sdk
   {:doc  "Build jar for the common sdk"
