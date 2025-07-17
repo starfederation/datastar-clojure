@@ -49,8 +49,7 @@
 ## Release
 
 - The library artifacts are published to Clojars (http://clojars.org) under the `dev.data-star.clojure` namespace.
-- The Clojars account is managed by Ben Croker, the DNS verification is managed by Delaney.
-- The Clojars deploy token is also managed by Ben and added to this repo as a GH Actions Secret
+- The Clojars account and deploy token are managed by Ben Croker, and added to this repo as GitHub action secrets:
   - Secret name: `CLOJARS_USERNAME`
     Value: _the clojars account username_
   - Secret name: `CLOJARS_PASSWORD`
@@ -59,7 +58,7 @@
 
 The Github Actions [CI workflow for clojure](../.github/workflows/release-sdk.yml) will always run the tests and produce jar artifacts.
 
-Triggering a deployment to clojars is a manual process. A Datastar core contributor must trigger the Clojure SDK workflow with the `publish` input boolean set to `true.
+Triggering a deployment to clojars is a manual process. A Datastar core contributor must trigger the `Release Clojure SDK` workflow with the `publish` input boolean set to `true`.
 
 **Release process:**
 
