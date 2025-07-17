@@ -13,13 +13,13 @@
        (string/join "")))
 
 
-(defn format-clj-cli-args [{:keys [X M main-ns args-str]}]
+(defn format-clj-cli-args [{:keys [cli X M main-ns args-str]}]
   (string/join " "
     (cond-> []
-      X        (conj (str "-X" (aliases->str X)))
-      true     (conj (str "-M" (when M (aliases->str M))))
-      main-ns  (conj "-m" main-ns)
-      args-str (conj args-str))))
+      X                        (conj (str "-X" (aliases->str X)))
+      (or M (= "clojure" cli)) (conj (str "-M" (when M (aliases->str M))))
+      main-ns                  (conj "-m" main-ns)
+      args-str                 (conj args-str))))
 
 
 (defn print-cli [{:keys [cli X M main-ns args-str dir] :as args}]
