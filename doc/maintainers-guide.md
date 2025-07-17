@@ -57,7 +57,7 @@
     Value: _the clojars deploy token_
 - The libraries' versions are bumped in lockstep so that there is no confusion over which version of the common lib should be used with an adapter lib.
 
-The Github Actions [CI workflow for clojure](../../.github/workflows/clojure-sdk.yml) will always run the tests and produce jar artifacts.
+The Github Actions [CI workflow for clojure](../.github/workflows/release-sdk.yml) will always run the tests and produce jar artifacts.
 
 Triggering a deployment to clojars is a manual process. A Datastar core contributor must trigger the Clojure SDK workflow with the `publish` input boolean set to `true.
 
