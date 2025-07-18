@@ -22,55 +22,13 @@ If you want to roll your own adapter implementation, see
 
 To your `deps.edn` file you can add the following coordinates:
 
-| library       | deps coordinate                                                                                                              |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| SDK           | [![](https://clojars.org/dev.data-star.clojure/latest-version.svg)](https://clojars.org/dev.data-star.clojure/sdk)           |
-| http-kit      | [![](https://clojars.org/dev.data-star.clojure/latest-version.svg)](https://clojars.org/dev.data-star.clojure/http-kit)      |
-| ring          | [![](https://clojars.org/dev.data-star.clojure/latest-version.svg)](https://clojars.org/dev.data-star.clojure/ring)          |
-| brotli        | [![](https://clojars.org/dev.data-star.clojure/latest-version.svg)](https://clojars.org/dev.data-star.clojure/brotli)        |
-| malli-schemas | [![](https://clojars.org/dev.data-star.clojure/latest-version.svg)](https://clojars.org/dev.data-star.clojure/malli-schemas) |
-
-Or via git deps:
-
-- SDK
-
-```clojure
-datastar/sdk {:git/url "https://github.com/starfederation/datastar-clojure"
-              :git/sha "LATEST_SHA"
-              :deps/root "sdk/"}}
-```
-
-- http-kit
-
-```clojure
-datastar/http-kit {:git/url "https://github.com/starfederation/datastar-clojure"
-                   :git/sha "LATEST_SHA"
-                   :deps/root "sdk-adapter-http-kit/"}}
-```
-
-- ring
-
-```clojure
-datastar/ring {:git/url "https://github.com/starfederation/datastar-clojure"
-               :git/sha "LATEST_SHA"
-               :deps/root "sdk-adapter-ring/"}}
-```
-
-- brotli
-
-```clojure
-datastar/brotli {:git/url "https://github.com/starfederation/datastar-clojure"
-                 :git/sha "LATEST_SHA"
-                 :deps/root "sdk-brotli/"}}
-```
-
-- malli-schemas
-
-```clojure
-datastar/malli-schemas {:git/url "https://github.com/starfederation/datastar-clojure"
-                        :git/sha "LATEST_SHA"
-                        :deps/root "sdk-malli-schemas/"}}
-```
+| library       | deps coordinate                                                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SDK           | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/sdk.svg)](https://clojars.org/dev.data-star.clojure/sdk)                     |
+| http-kit      | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/http-kit.svg)](https://clojars.org/dev.data-star.clojure/http-kit)           |
+| ring          | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/ring.svg)](https://clojars.org/dev.data-star.clojure/ring)                   |
+| brotli        | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/brotli.svg)](https://clojars.org/dev.data-star.clojure/brotli)               |
+| malli-schemas | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/malli-schemas.svg)](https://clojars.org/dev.data-star.clojure/malli-schemas) |
 
 Notes:
 
@@ -201,4 +159,4 @@ There must be some buffering happening independent of our implementation.
 
 ## License
 
-[![License](https://img.shields.io/github/license/starfederation/datastar)](https://github.com/starfederation/datastar/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/starfederation/datastar)](https://github.com/starfederation/datastar/blob/main/LICENSE.md)
