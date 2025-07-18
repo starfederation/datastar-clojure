@@ -127,5 +127,5 @@
   publish:all
   {:doc     "Publish the clojure sdk libs to clojars"
    :depends [jar:all]
-   :task    (doseq [dir sdk-lib-dirs]
+   :task    (doseq [dir t/sdk-lib-dirs]
               (t/lib-publish! dir))}}}
