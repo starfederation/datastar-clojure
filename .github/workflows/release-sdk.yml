@@ -98,4 +98,7 @@ jobs:
 
       - name: Publish artifacts to clojars
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true'
+        env:
+          CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+          CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
         run: bb publish:all
