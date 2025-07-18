@@ -22,7 +22,11 @@
                 :lib lib
                 :version version
                 :basis basis
-                :src-dirs ["src/main"]})
+                :src-dirs ["src/main"]
+                :pom-data [[:licenses
+                            [:license
+                             [:name "The MIT License"]
+                             [:url "https://github.com/starfederation/datastar-clojure/blob/main/LICENSE.md"]]]]})
   (b/copy-dir {:src-dirs ["src/main"]
                :target-dir class-dir})
   (b/jar {:class-dir class-dir
