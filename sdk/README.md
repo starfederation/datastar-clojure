@@ -4,15 +4,6 @@ This is where the code for the Generic SDK lives.
 
 ## Installation
 
-For now the SDK and adapters are distributed as git dependencies using a `deps.edn` file.
-If you roll your own adapter you only need:
+Install using clojars deps coordinates:
 
-```clojure
-{datastar/sdk {:git/url "https://github.com/starfederation/datastar/tree/develop"
-               :git/sha "LATEST SHA"
-               :deps/root "sdk/clojure/sdk"}}
-```
-
-> [!important]
-> This project is new and there isn't a release process yet other than using git shas.
-> Replace `LATEST_SHA` in the git coordinates below by the actual latest commit sha of the repository.
+[![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/sdk.svg)](https://clojars.org/dev.data-star.clojure/sdk)
