@@ -67,5 +67,9 @@
   :test.paths/adapter-ring       ["src/test/adapter-ring"]
   :test.paths/adapter-ring-jetty ["src/test/adapter-ring-jetty"]
   :test.paths/adapter-rj9a       ["src/test/adapter-rj9a"]
-  :test.paths/adapter-http-kit   ["src/test/adapter-http-kit"]}}
-
+  :test.paths/adapter-http-kit   ["src/test/adapter-http-kit"]
+  :neil {:project {:url "https://github.com/starfederation/datastar-clojure"
+                   :scm  [:scm
+                          [:url "https://github.com/"]
+                          [:connection "scm:git:https://github.com/starfederation/datastar-clojure.git"]
+                          [:developerConnection "scm:git:ssh:git@github.com:starfederation/datastar-clojure.git"]]}}}}
