@@ -2,16 +2,9 @@
 
 ## Installation
 
-For now the SDK and adapters are distributed as git dependencies using a `deps.edn` file.
+Install using clojars deps coordinates:
 
-```clojure
-{datastar/malli-schemas {:git/url "https://github.com/starfederation/datastar/"
-                         :git/sha "LATEST SHA"
-                         :deps/root "sdk/clojure/malli-schemas"}}
-```
-
-> [!important]
-> Replace `LATEST_SHA` in the git coordinates below by the actual latest commit sha of the repository.
+[![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/malli-schemas.svg)](https://clojars.org/dev.data-star.clojure/malli-schemas)
 
 ## Usage
 
@@ -25,3 +18,4 @@ Notable schema namespaces:
 - `starfederation.datastar.clojure.adapter.common-schemas` for the common adapter machinery (write profiles)
 - `starfederation.datastar.clojure.adapter.http-kit-schemas` for the http-kit adapter
 - `starfederation.datastar.clojure.adapter.ring-schemas` for the ring adapter
+

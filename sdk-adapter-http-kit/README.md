@@ -2,17 +2,9 @@
 
 ## Installation
 
-For now the SDK and adapters are distributed as git dependencies using a `deps.edn` file.
+Install using clojars deps coordinates:
 
-```clojure
-{datastar/sdk {:git/url "https://github.com/starfederation/datastar/"
-               :git/sha "LATEST SHA"
-               :deps/root "sdk/clojure/sdk"}
+[![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/http-kit.svg)](https://clojars.org/dev.data-star.clojure/http-kit)
 
- datastar/http-kit {:git/url "https://github.com/starfederation/datastar/"
-                    :git/sha "LATEST SHA"
-                    :deps/root "sdk/clojure/adapter-http-kit"}}
-```
-
-> [!important]
-> Replace `LATEST_SHA` in the git coordinates below by the actual latest commit sha of the repository.
+Don't forget, you need the base SDK also:
+[![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/sdk.svg)](https://clojars.org/dev.data-star.clojure/sdk)
