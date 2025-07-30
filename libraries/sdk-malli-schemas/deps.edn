@@ -1,0 +1,10 @@
+{:paths ["src/main"]
+ :deps {dev.data-star.clojure/sdk {:mvn/version "1.0.0-RC2"}
+        metosin/malli             {:mvn/version "0.19.1"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.10"
+                                                         :git/sha "deedd62"}
+                          slipset/deps-deploy {:mvn/version "0.2.2"}}
+                   :ns-default build}
+           :neil  {:project {:name    dev.data-star.clojure/malli-schemas
+                             :version "1.0.0-RC2"
+                             :description "Malli schemas for the Datastar SDK"}}}}

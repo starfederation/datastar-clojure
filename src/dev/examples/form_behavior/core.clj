@@ -13,7 +13,6 @@
 
 
 ;; Trying out several way we might rightly and wrongly use html forms
-;; TODO: still need to figure out some things
 
 (defn result-area [value]
   (hc/compile

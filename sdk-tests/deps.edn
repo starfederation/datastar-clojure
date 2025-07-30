@@ -1,7 +1,8 @@
 {:paths ["src/main"]
  
- :deps {datastar/sdk              {:local/root "../sdk"}
-        datastar/ring             {:local/root "../sdk-adapter-ring"}
+ :deps {datastar/sdk              {:local/root "../libraries/sdk/"}
+        datastar/ring             {:local/root "../libraries/sdk-ring/"
+                                   :exclusions [dev.data-star.clojure/sdk]}
         ring/ring-jetty-adapter   {:mvn/version "1.13.0"}
         metosin/reitit            {:mvn/version "0.7.2"}
         com.cnuernber/charred     {:mvn/version "1.034"}

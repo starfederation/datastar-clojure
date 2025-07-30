@@ -1,16 +1,23 @@
 {:paths ["src/bb"
-         "sdk/src/main"
-         "sdk-adapter-http-kit/src/main/"
-         "sdk-malli-schemas/src/main"
+         "libraries/sdk/src/main"
+         "libraries/sdk-http-kit/src/main/"
+         "libraries/sdk-http-kit-malli-schemas/src/main"
+         "libraries/sdk-malli-schemas/src/main"
          "./src/test/core-sdk"
          "./src/test/malli-schemas"]
 
- :deps {io.github.noahtheduke/lazytest {:mvn/version "1.8.0"}
-        metosin/malli                  {:mvn/version "0.17.0"}}
+ :deps {borkdude/rewrite-edn           {:mvn/version "0.4.9"}
+        io.github.noahtheduke/lazytest {:mvn/version "1.8.0"}
+        metosin/malli                  {:mvn/version "0.19.1"}}
 
  :tasks
- {:requires ([tasks :as t])
+ {:requires ([tasks        :as t]
+             [tasks.build  :as build]
+             [tasks.cljdoc :as cljdoc])
 
+  ;; ---------------------------------------------------------------------------
+  ;; Dev tasks
+  ;; ---------------------------------------------------------------------------
   dev
   {:doc "Starts a dev repl. Additional deps aliases can be passed as arguments."
    :task (t/dev :http-kit :ring-jetty :malli-schemas)}
@@ -22,11 +29,14 @@
   dev:empty
   {:doc "Dev repl with no adapters."
    :task (t/dev :malli-schemas)}
-  
+ 
   dev:bb
   {:doc "Start a babashka nrepl server. An addr like `localhost:1234` can be passed as argument."
    :task (t/dev-bb)}
 
+  ;; ---------------------------------------------------------------------------
+  ;; Test Tasks
+  ;; ---------------------------------------------------------------------------
   test:all
   {:doc "Run all tests once."
    :task (t/lazytest [:http-kit
@@ -67,31 +77,37 @@
   {:doc "Run core unit tests with babashka."
    :task (t/bb-lazytest [:test.paths/core-sdk
                          :test.paths/malli-schemas])}
-  
+
   test:sdk-common
   {:doc "Run the server used for the SDKs' common tests."
    :task (t/start-test-server)}
 
+  test:sdk-common-go
+  {:doc "Run the server used for the SDKs' common tests."
+   :task (t/run-go-tests)}
 
+  ;; ---------------------------------------------------------------------------
+  ;; Build tasks
+  ;; ---------------------------------------------------------------------------
   jar:sdk
   {:doc  "Build jar for the common sdk"
-   :task (t/lib-jar! t/sdk-dir)}
+   :task (build/lib-jar! build/sdk-dir)}
 
   jar:sdk-adapter-ring
   {:doc  "Build jar for the adapter-ring"
-   :task (t/lib-jar! t/sdk-adapter-ring-dir)}
+   :task (build/lib-jar! build/sdk-adapter-ring-dir)}
 
   jar:sdk-adapter-http-kit
   {:doc  "Build jar for the adapter-http-kit"
-   :task (t/lib-jar! t/sdk-adapter-http-kit-dir)}
+   :task (build/lib-jar! build/sdk-adapter-http-kit-dir)}
 
   jar:sdk-brotli
   {:doc  "Build jar for the Brotli library"
-   :task (t/lib-jar! t/sdk-brotli-dir)}
+   :task (build/lib-jar! build/sdk-brotli-dir)}
 
   jar:sdk-malli-schemas
   {:doc  "Build jar for the malli-schemas"
-   :task (t/lib-jar! t/sdk-malli-schemas-dir)}
+   :task (build/lib-jar! build/sdk-malli-schemas-dir)}
 
   jar:all
   {:doc     "Build the jar for all the libs"
@@ -102,30 +118,54 @@
              jar:sdk-brotli
              jar:sdk-malli-schemas]}
 
+  install:clean
+  {:doc "Deletes all datastar libs from the local maven repository."
+   :task (build/clean-maven-dir!)}
+
+
   install:all
-  {:doc "Install all libraries"
+  {:doc "Install all libraries locally."
    :depends [clean]
-   :task (doseq [dir t/sdk-lib-dirs]
-           (t/lib-install! dir))}
+   :task (doseq [dir build/sdk-lib-dirs]
+           (build/lib-install! dir))}
 
   clean
-  {:doc  "Clean build artifacts"
-   :task (doseq [dir t/sdk-lib-dirs]
+  {:doc  "Clean build artifacts in each library directory."
+   :task (doseq [dir build/sdk-lib-dirs]
+           (println "----------------")
+           (println "Cleaning: " dir)
+           (println "----------------")
            (clojure {:dir dir} "-T:build clean"))}
 
   set-version
   {:doc  "Set the version in all libs"
-   :task (doseq [dir t/sdk-lib-dirs]
-           (t/lib-set-version! dir (first *command-line-args*)))}
+   :task (doseq [dir build/sdk-lib-dirs]
+           (build/lib-set-version! dir (first *command-line-args*)))}
 
   bump-version
   {:doc  "Bump the version component in all libs. First argument must be one of: major, minor, patch"
-   :task (doseq [dir sdk-lib-dirs]
+   :task (doseq [dir build/sdk-lib-dirs]
            (let [component (first *command-line-args*)]
-             (t/lib-bump! dir component)))}
+             (build/lib-bump! dir component)))}
 
   publish:all
   {:doc     "Publish the clojure sdk libs to clojars"
    :depends [jar:all]
-   :task    (doseq [dir t/sdk-lib-dirs]
-              (t/lib-publish! dir))}}}
+   :task    (doseq [dir build/sdk-lib-dirs]
+              (build/lib-publish! dir))}
+
+  ;; ---------------------------------------------------------------------------
+  ;; Cljdoc tasks
+  ;; ---------------------------------------------------------------------------
+  cljdoc:clean
+  {:doc "Clean local cljdoc data."
+   :task (cljdoc/clean!)}
+
+  cljdoc:server
+  {:doc "Start a local cljdoc server."
+   :task (cljdoc/start-server!)}
+
+  cljdoc:ingest
+  {:doc "Tell local cljdoc server to ingest a library. Needs a argument (:sdk, :http-kit, :ring, ...)"
+   :task (cljdoc/ingest! (first *command-line-args*))}}}
+

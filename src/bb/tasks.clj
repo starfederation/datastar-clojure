@@ -4,6 +4,7 @@
     [clojure.string :as string]
     [clojure.edn :as edn]))
 
+
 ;; -----------------------------------------------------------------------------
 ;; Clojure cli invocation helpers
 ;; -----------------------------------------------------------------------------
@@ -37,6 +38,15 @@
 
 
 (defn clojure
+  "Invoke the clojure cli.
+
+  Arg keys:
+  - `:dir`: directory in which to invoke the cli
+  - `:X`: clojure `-X` option (seq of deps keywords aliases)
+  - `:M`: clojure `-X` option (seq of deps keywords aliases)
+  - `:main-ns`: namespace of the main function
+  - `:args-str`: additional args for the cli
+  "
   {:arglists '([{:keys [X M main-ns args-str dir]}])}
   [{:as args}]
   (let [invocation (-> args
@@ -49,6 +59,13 @@
 
 
 (defn bb
+  "Invoke the babashka cli.
+
+  Arg keys:
+  - `:dir`: directory in which to invoke the cli
+  - `:main-ns`: namespace of the main function
+  - `:args-str`: additional args for the cli
+  "
   {:arglists '([{:keys [main-ns args-str]}])}
   [{:as args}]
   (-> args
@@ -69,13 +86,16 @@
    :malli-schemas
    :sdk-brotli])
 
+
 (defn arg->kw [s]
   (if (string/starts-with? s ":")
     (keyword (subs s 1))
     (keyword s)))
 
 
-(defn dev [& aliases]
+(defn dev
+  "Start a clojure repl with deps `aliases`."
+  [& aliases]
   (let [aliases (-> dev-aliases
                     (into aliases)
                     (into (map arg->kw *command-line-args*)))]
@@ -83,11 +103,13 @@
               :main-ns 'nrepl.cmdline
               :args-str " --middleware \"[cider.nrepl/cider-middleware]\""})))
 
-(defn dev-bb [& [addr]]
+
+(defn dev-bb
+  "Start a babashka repl."
+  [& [addr]]
   (let [addr (or addr (first *command-line-args*))]
     (bb {:args-str (str " nrepl-server"
                         (when addr (str " " addr)))})))
-
 
 
 ;; -----------------------------------------------------------------------------
@@ -114,7 +136,7 @@
    :main-ns 'lazytest.main
    :args-str (string/join " "
                  (conj (named-paths->dirs named-paths)
-                       args))})
+                       (string/join " " args)))})
 
 
 (defn lazytest [aliases paths-aliases & args]
@@ -130,49 +152,11 @@
       lazytest-invocation
       bb))
 
+
 (defn start-test-server []
   (clojure {:dir "sdk-tests"
             :main-ns 'starfederation.datastar.clojure.sdk-test.main}))
 
-;; -----------------------------------------------------------------------------
-;; Build tasks
-;; -----------------------------------------------------------------------------
-(def sdk-dir                  "sdk")
-(def sdk-adapter-http-kit-dir "sdk-adapter-http-kit")
-(def sdk-adapter-ring-dir     "sdk-adapter-ring")
-(def sdk-brotli-dir           "sdk-brotli")
-(def sdk-malli-schemas-dir    "sdk-malli-schemas")
 
-(def sdk-lib-dirs
-  [sdk-dir
-   sdk-adapter-ring-dir
-   sdk-adapter-http-kit-dir
-   sdk-brotli-dir
-   sdk-malli-schemas-dir])
-
-
-(defn lib-jar! [dir]
-  (t/clojure {:dir dir} "-T:build jar"))
-
-
-(defn lib-install! [dir]
-  (t/clojure {:dir dir} "-T:build install"))
-
-
-(defn lib-clean! [dir]
-  (t/clojure {:dir dir} "-T:build clean"))
-
-
-(defn lib-bump! [dir component]
-  (when-not (contains? #{"major" "minor" "patch"} component)
-    (println (str "ERROR: First argument must be one of: major, minor, patch. Got: " (or component "nil")))
-    (System/exit 1))
-  (t/shell {:dir dir} (str "neil version " component " --no-tag")))
-
-
-(defn lib-set-version! [dir version]
-  (t/shell {:dir dir} (str "neil version set " version " --no-tag")))
-
-
-(defn lib-publish! [dir]
-  (t/clojure {:dir dir} "-T:build deploy"))
+(defn run-go-tests []
+  (t/shell "go run github.com/starfederation/datastar/sdk/tests/cmd/datastar-sdk-tests@latest"))

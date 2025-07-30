@@ -1,5 +1,28 @@
 # Release notes for the Clojure SDK
 
+## 2025-09-11 - RC2
+
+This release is mostly centered around documentation and cljdoc compatibility.
+
+### Changes
+
+- We now depend on http-kit `v2.9.0-beta2`
+- Libraries interdependencies are now explicit in their `deps.edn`
+- Malli schemas are now split into 3 libraries. This comes from the need to be
+  cljdoc compatible
+
+### Added
+
+- New articles have been added to the `doc` directory
+- Several docstrings have been added / updated
+- There are new babashka tasks to help running a local cljdoc instance and
+  ingesting the docs locally
+- The build process now adds libraries interdependencies automatically
+
+### Fixed
+
+- cljdoc ingestion
+
 ## 2025-06-22
 
 ### Changed
@@ -19,7 +42,7 @@
 
 ### Fixed
 
-- A superflous newline character was send when marking the end of a SSE event
+- A superfluous newline character was send when marking the end of a SSE event
 - The clj-kondo config file for the SDK has been moved in a
   `clj-kondo.exports/starfederation.datastar.clojure/sdk` directory. This change
   allows for other projects to use
