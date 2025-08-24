@@ -109,12 +109,12 @@ It provides advanced functionality for managing several aspects of SSE.
 You can find more information in several places:
 
 - the docstings for the `->sse-response` function you are using.
-- the [SSE design notes document](/sdk/clojure/doc/SSE-design-notes.md) details
+- the [SSE design notes document](/doc/SSE-design-notes.md) details
   what considerations are taken into account in the SDK.
-- the [write profiles document](/sdk/clojure/doc/Write-profiles.md) details the
+- the [write profiles document](/doc/Write-profiles.md) details the
   tools the SDK provides to control the buffering behaviors of a SSE stream and
   how to use compression.
-- the [adapter implementation guide](/sdk/clojure/doc/implementing-adapters.md)
+- the [adapter implementation guide](/doc/implementing-adapters.md)
   lists the conventions by which SDK adapters are implemented if the need to
   implement your own ever arises.
 
