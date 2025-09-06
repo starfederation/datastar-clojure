@@ -1,6 +1,15 @@
 # A Datastar + http-kit starter
 
-For development,
+## Running the example
 
-1. Start a REPL
-2. Run the `start!` function in `hello_httpkit.clj`.
+- repl:
+
+```
+clojure -M:repl -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
+```
+
+- main:
+
+```
+clojure -M -m hello-httpkit
+```
