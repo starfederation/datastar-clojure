@@ -58,17 +58,18 @@ Here are some solutions for buffering the writes:
 | 2        | churning through buffers for each event sent |
 | 3        | controlled allocations                       |
 
-| solution | notes                                                                           |
-| -------- | ------------------------------------------------------------------------------- |
-| 1        | we can control the size of the buffer                                           |
-| 2        | the jvm gc should be able _recycle_ short lived objects                         |
+| solution | notes                                                       |
+| -------- | --------------------------------------------------------- |
+| 1        | we can control the size of the buffer |
+| 2        | the jvm gc should be able _recycle_ short lived objects |
 | 3        | no direct support in the jvm, gc _recycling_ maybe be better, needs to be tuned |
 
-> [!note]
+> [!NOTE]
 > An `OutputStream` compression wrapper comes with an internal buffer and a
 > context window that will both allocate and retain memory.
 
-> [!important]
+
+> [!IMPORTANT]
 > A `ByteArrayOutputStream` is also another buffer, it doesn't shrink in size
 > when reset is called (see [javadoc](<https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/ByteArrayOutputStream.html#reset()>))
 

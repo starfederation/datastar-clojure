@@ -12,30 +12,30 @@ We provide several libraries for working with [Datastar](https://data-star.dev/)
 
 There currently are adapter implementations for:
 
-- [ring](https://github.com/ring-clojure/ring)
+- [ring compliant adapters](https://github.com/ring-clojure/ring)
 - [http-kit](https://github.com/http-kit/http-kit)
 
 If you want to roll your own adapter implementation, see
 [implementing-adapters](/doc/implementing-adapters.md).
 
-## Installation
+## Library coordinates
 
-To your `deps.edn` file you can add the following coordinates:
 
-| library       | deps coordinate                                                                                                                                         |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| library       | deps coordinate                                     |
+| ------------- | ----------------------------------------------------|
 | SDK           | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/sdk.svg)](https://clojars.org/dev.data-star.clojure/sdk)                     |
 | http-kit      | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/http-kit.svg)](https://clojars.org/dev.data-star.clojure/http-kit)           |
 | ring          | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/ring.svg)](https://clojars.org/dev.data-star.clojure/ring)                   |
 | brotli        | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/brotli.svg)](https://clojars.org/dev.data-star.clojure/brotli)               |
-| malli-schemas | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/malli-schemas.svg)](https://clojars.org/dev.data-star.clojure/malli-schemas) |
+| Core SDK malli schemas | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/malli-schemas.svg)](https://clojars.org/dev.data-star.clojure/malli-schemas) |
+| Http-kit malli schemas | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/http-kit-malli-schemas.svg)](https://clojars.org/dev.data-star.clojure/http-kit-malli-schemas) |
+| Ring malli schemas | [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/ring-malli-schemas.svg)](https://clojars.org/dev.data-star.clojure/ring-malli-schemas) |
 
-Notes:
-
-- You need the SDK and either the http-kit or the ring library to get started.
+- To get started you'll need either the http-kit library or the ring one.
+- Other libraries are optional
 - The ring library works with ring compliant adapters (adapter using the
   `ring.core.protocols/StreamableResponseBody`)
-- Currently the brotli library works only with http-kit
+- Currently the Brotli library works only with http-kit
 
 ## Usage
 
@@ -96,9 +96,6 @@ it somewhere and use it later:
 
 ```
 
-Check the docstrings in the `starfederation.datastar.clojure.api` namespace for
-more details.
-
 ### Advanced features
 
 This SDK is essentially a tool to manage SSE connections with helpers to format
@@ -117,40 +114,6 @@ You can find more information in several places:
 - the [adapter implementation guide](/doc/implementing-adapters.md)
   lists the conventions by which SDK adapters are implemented if the need to
   implement your own ever arises.
-
-## Adapter behaviors:
-
-Ring adapters are not made equals. This leads to our SSE generators not having
-the exact same behaviors in some cases.
-
-### SSE connection lifetime in ring when trying to store the sse-gen somewhere
-
-#### With ring sync
-
-| Adapter  |                                                                        |
-| -------- | ---------------------------------------------------------------------- |
-| ring     | same as the thread creating the sse response                           |
-| http-kit | alive until the client or the server explicitely closes the connection |
-
-You may keep the connection open in ring sync mode by somehow blocking the thread
-handling the request. This is a valid strategy when using java's virtual threads.
-
-#### With ring async
-
-| Adapter      |                                                                        |
-| ------------ | ---------------------------------------------------------------------- |
-| all adapters | alive until the client or the server explicitely closes the connection |
-
-### Detecting a closed connection
-
-| Adapter  |                                                                                                 |
-| -------- | ----------------------------------------------------------------------------------------------- |
-| ring     | Sending events on a closed connection will fail at some point and the sse-gen will close itself |
-| http-kit | Http-kit detects closed connections by itself and closes the sse-gen                            |
-
-At this moment, when using the ring adapter and jetty, our SSE generators need
-to send 2 small events or 1 big event to detect a closed connection.
-There must be some buffering happening independent of our implementation.
 
 ## TODO:
 

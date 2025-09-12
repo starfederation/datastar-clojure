@@ -59,40 +59,54 @@ jobs:
         run: bb test:bb
 
       - name: Build jar artifacts
-        run: bb jar:all
+        run: bb install:all
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
         with:
           name: sdk.jar
-          path: sdk/target/*.jar
-          if-no-files-found: error
-          compression-level: 0
-
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
-        with:
-          name: adapter-http-kit.jar
-          path: sdk-adapter-http-kit/target/*.jar
-          if-no-files-found: error
-          compression-level: 0
-
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
-        with:
-          name: adapter-ring.jar
-          path: sdk-adapter-ring/target/*.jar
-          if-no-files-found: error
-          compression-level: 0
-
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
-        with:
-          name: malli-schemas.jar
-          path: sdk-malli-schemas/target/*.jar
+          path: libraries/sdk/target/*.jar
           if-no-files-found: error
           compression-level: 0
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
         with:
           name: brotli.jar
-          path: sdk-brotli/target/*.jar
+          path: libraries/sdk-brotli/target/*.jar
+          if-no-files-found: error
+          compression-level: 0
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+        with:
+          name: adapter-http-kit.jar
+          path: libraries/sdk-http-kit/target/*.jar
+          if-no-files-found: error
+          compression-level: 0
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+        with:
+          name: adapter-http-kit-malli-schemas.jar
+          path: libraries/sdk-http-kit-malli-schemas/target/*.jar
+          if-no-files-found: error
+          compression-level: 0
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+        with:
+          name: malli-schemas.jar
+          path: libraries/sdk-malli-schemas/target/*.jar
+          if-no-files-found: error
+          compression-level: 0
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+        with:
+          name: adapter-ring.jar
+          path: libraries/sdk-ring/target/*.jar
+          if-no-files-found: error
+          compression-level: 0
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+        with:
+          name: adapter-ring-malli-schemas.jar
+          path: libraries/sdk-ring-malli-schemas/target/*.jar
           if-no-files-found: error
           compression-level: 0
 

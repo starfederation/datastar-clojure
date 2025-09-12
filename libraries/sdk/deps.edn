@@ -1,0 +1,8 @@
+{:paths   ["src/main" "resources"]
+ :aliases {:build {:deps       {io.github.clojure/tools.build {:git/tag "v0.10.10"
+                                                               :git/sha "deedd62"}
+                                slipset/deps-deploy           {:mvn/version "0.2.2"}}
+                   :ns-default build}
+           :neil  {:project {:name    dev.data-star.clojure/sdk
+                             :version "1.0.0-RC2"
+                             :description "Datastar SDK for Clojure"}}}}
