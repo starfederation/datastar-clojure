@@ -63,11 +63,11 @@
                                sdk/http-malli {:local/root "./libraries/sdk-http-kit-malli-schemas/"
                                                :exclusions [dev.data-star.clojure/sdk
                                                             dev.data-star.clojure/http-kit
-                                                            dev.data-star.clojure/http-kit-malli-schemas]}
+                                                            dev.data-star.clojure/malli-schemas]}
                                sdk/http-ring  {:local/root "./libraries/sdk-ring-malli-schemas/"
                                                :exclusions [dev.data-star.clojure/sdk
                                                             dev.data-star.clojure/ring
-                                                            dev.data-star.clojure/ring-malli-schemas]}}}
+                                                            dev.data-star.clojure/malli-schemas]}}}
 
   :sdk-brotli    {:extra-deps {sdk/brotli                                     {:local/root "./libraries/sdk-brotli"
                                                                                :exclusions [dev.data-star.clojure/sdk]}
