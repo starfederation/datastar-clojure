@@ -85,6 +85,6 @@
 
   :neil {:project {:url "https://github.com/starfederation/datastar-clojure"
                    :scm  [:scm
-                          [:url "https://github.com/"]
+                          [:url "https://github.com/starfederation/datastar-clojure"]
                           [:connection "scm:git:https://github.com/starfederation/datastar-clojure.git"]
                           [:developerConnection "scm:git:ssh:git@github.com:starfederation/datastar-clojure.git"]]}}}}

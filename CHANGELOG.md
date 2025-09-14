@@ -1,5 +1,10 @@
 # Release notes for the Clojure SDK
 
+## 2025-09-14 - RC3
+
+### Fixed
+Fixed the scm info that goes in `pom.xml` files.
+
 ## 2025-09-14 - RC2
 
 This release is mostly centered around documentation and cljdoc compatibility.

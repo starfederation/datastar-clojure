@@ -36,7 +36,7 @@
                 :basis @basis
                 :src-dirs ["src/main" "resources"]
                 :pom-data [[:description description]
-                           [:url (permalink cwd)]
+                           [:url (permalink (str "libraries/" cwd))]
                            [:licenses
                             [:license
                              [:name "The MIT License"]
