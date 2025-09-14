@@ -1,8 +1,8 @@
 # Write profiles
 
 To manage several aspects of a SSE connection
-(see the [SSE design notes](./SSE-design-notes.md)) the SDK provides a `write profile`
-mechanism. It lets you control:
+(see the [SSE design notes](/doc/SSE-design-notes.md)) the SDK provides a
+`write profile` mechanism. It lets you control:
 
 - the buffering behavior of the SSE connection
 - whether you want to add compression to the SSE stream

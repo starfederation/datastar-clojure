@@ -1,0 +1,22 @@
+{:cljdoc/languages ["clj"]
+ :cljdoc.doc/tree
+ [["Readme"    {:file "README.md"}]
+  ["Changelog" {:file "CHANGELOG.md"}]
+
+  ["SDK docs"
+   ["Using Datastar"          {:file "doc/Using-datastar.md"}]
+   ["A tour of the API"       {:file "doc/Api.md"}]
+   ["SDK Libraries"           {:file "doc/Libraries.md"}
+    ["Core SDK"               {:file "libraries/sdk/README.md"}]
+    ["Http-kit adapter"       {:file "libraries/sdk-http-kit/README.md"}]
+    ["Ring adapter"           {:file "libraries/sdk-ring/README.md"}]
+    ["Core Malli Schemas"     {:file "libraries/sdk-malli-schemas/README.md"}]
+    ["Http-kit Malli Schemas" {:file "libraries/sdk-http-kit-malli-schemas/README.md"}]
+    ["Ring Malli Schemas"     {:file "libraries/sdk-ring-malli-schemas/README.md"}]
+    ["Brotli"                 {:file "libraries/sdk-brotli/README.md"}]]
+   ["Write profiles"          {:file "doc/Write-profiles.md"}]]
+
+  ["Internals and advanced topics"
+   ["SSE design notes"          {:file "doc/SSE-design-notes.md"}]
+   ["Maintainer's guide"        {:file "doc/maintainers-guide.md"}]
+   ["Adapter implemation guide" {:file "doc/implementing-adapters.md"}]]]}

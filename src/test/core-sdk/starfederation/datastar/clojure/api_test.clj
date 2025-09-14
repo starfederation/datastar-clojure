@@ -72,9 +72,9 @@
 
 
 (defdescribe test-common-sse-opts
-  (basic-test d*/patch-elements!     "" patch-element-t [])
-  (basic-test d*/patch-elements-seq! [] patch-element-t [])
-  (basic-test d*/patch-signals!      "" patch-signals-t  []))
+  (basic-test #'d*/patch-elements!     "" patch-element-t [])
+  (basic-test #'d*/patch-elements-seq! [] patch-element-t [])
+  (basic-test #'d*/patch-signals!      "" patch-signals-t  []))
 
 
 (comment
