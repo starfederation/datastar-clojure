@@ -24,8 +24,9 @@ Any ring adapter using this protocol should work with this library.
 ### Detecting a closed connection
 
 With the [ring-jetty-adapter](https://github.com/ring-clojure/ring/tree/master/ring-jetty-adapter),
-sending events on a closed connection will fail at some point and the SSE-Gen
-will close itself and close the `on-close` callback.
+sending events on a closed connection will fail at some point throwing an
+`IOException`. By default the SSE-Gen will catch this exception, close itself
+then call the `on-close` callback.
 
 > [!Note]
 > At this moment, when using the ring adapter and Jetty, our SSE-Gen needs
@@ -45,4 +46,5 @@ will close itself and close the `on-close` callback.
 > the initial response when using the synchronous API.
 
 In other words, the [barebones broadcast example](https://cljdoc.org/d/dev.data-star.clojure/sdk/CURRENT/doc/sdk-docs/using-datastar#barebones-broadcast)
-from the docs will work with the ring asynchronous API, not the synchronous one.
+from the docs will work with the ring asynchronous API, not the synchronous one
+when using this library.

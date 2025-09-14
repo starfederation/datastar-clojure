@@ -1,10 +1,10 @@
 # Using Datastar
 
-Datastar allows you to control a web page from the backend. To do so it uses
-HTTP responses to patch either the current dom or the signals present in the
+Datastar allows you to control a web page from the backend. HTTP responses are
+used to patch either the current dom or the signals present in the
 page.
 
-To do so Datastar provides 2 options:
+There are 2 main ways to structure HTTP responses for Datastar:
 
 - Return `text/html` or `application/json` HTTP response to patch the DOM or
   signals
@@ -35,7 +35,7 @@ SSE-Gens such as:
 
 The ring API provided by the adapter implementation you are using. It's main
 role is to provide a `->sse-response` function that builds a ring response
-tailored for the ring adapter you are using.
+tailored to your adapter.
 
 In the following examples we'll be using
 `starfederation.datastar.clojure.adapter.http-kit`.
@@ -82,9 +82,9 @@ The handler for this endpoint would be:
 ```
 
 1. We declare a standard ring handler which is a function of the HTTP request
-2. The handler returns a SSE response prepared by the SDK function
+2. The handler returns a SSE response
 3. We setup a callback that will be called once the SSE stream is opened
-4. The callback receives a `sse-gen` which is our SSE connection
+4. The callback receives a `sse-gen` which is the SSE-gen for this response
 5. Using `patch-elements` we send a HTML targeting the `"hello-field"` element
 6. We close the connection
 
@@ -110,12 +110,12 @@ response. Consider this handler:
      (fn [sse-gen]
 
        (d*/patch-elements! sse-gen
-         (html[:p {:id "hello-field"} "Hello"]))
+         (html [:p {:id "hello-field"} "Hello"]))
 
        (Thread/sleep 1000)
 
        (d*/patch-elements! sse-gen
-         (html[:p {:id "hello-field"} "Hello world!"]))
+         (html [:p {:id "hello-field"} "Hello world!"]))
 
        (d*/close-sse! sse-gen))}))
 
@@ -281,6 +281,6 @@ these may help you get a feel for what is possible.
 You can now learn more about each specific library we provide using the rest of
 the docs as well as the API docs.
 
-Also there are already several open source projects using Clojure and Datastar
+There are already several open source projects using Clojure and Datastar
 that refine the patterns we presented here. I would encourage you to explore
 these projects, use or take inspiration from them.

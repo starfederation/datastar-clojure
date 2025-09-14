@@ -53,13 +53,16 @@ HTML:
 
 ### [starfederation.datastar.clojure.adapter.common](https://cljdoc.org/d/dev.data-star.clojure/sdk/CURRENT/api/starfederation.datastar.clojure.adapter.common)
 
-This namespaces contains code shared between specific adapter. This is a more
-Advanced API needed mostly if you start writing custom adapters or custom
-[write profiles](/doc/Write-profiles.md)
+This namespace contains code shared between specific adapters. This is a more
+Advanced API needed mostly if you start
+[writing custom adapters](/doc/implementing-adapters.md) or custom
+[write profiles](/doc/Write-profiles.md).
 
-It contains the definition for the keys used in the option maps of
-`->sse-response` functions, utilities for working with output streams and
-building [write profiles](/doc/Write-profiles.md) and default callbacks.
+It contains:
+
+- definition for the keys used in the option maps of `->sse-response` functions
+- utilities for working with output streams and building [write profiles](/doc/Write-profiles.md)
+- default callbacks.
 
 ### [starfederation.datastar.clojure.adapter.test](https://cljdoc.org/d/dev.data-star.clojure/sdk/CURRENT/api/starfederation.datastar.clojure.adapter.test)
 
@@ -100,7 +103,7 @@ SSE-Gen yourself the `on-close` callback will be called. Note that when that
 happens it is already no longer possible to send events.
 
 When sending events to the client, if an exception is thrown a `on-exception`
-callback will be called. If you don't provide it a default one will be in place.
+callback will be called. If you don't provide it a default one will be used.
 The default behavior is to close the connection on `java.io.IOException` and
 rethrow otherwise.
 
@@ -115,7 +118,7 @@ synchronous and asynchronous APIs behave.
 
 Refer to the SDK adapter READMEs for more information.
 
-### Option keys, default write profiles
+### Option keys & default write profiles aliases
 
 Besides the `->sse-reponse` function the `starfederation.datastar.clojure.adapter.XXX`
 namespaces provides aliases to the commonly used code from the

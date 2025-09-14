@@ -18,8 +18,7 @@ This library already depends on the core SDK lib.
 ## Overview
 
 This library provides an implementation of the
-`starfederation.datastar.clojure.protocols/SSEGenerator` for Http-kit and an API
-to return ring responses using it.
+`starfederation.datastar.clojure.protocols/SSEGenerator` for Http-kit.
 
 It provides 2 APIs to create ring SSE response tailored to Http-kit.
 
@@ -30,7 +29,7 @@ This this the original API, it is mostly one function: `->sse-response`.
 Using this namespace is straightforward but it has a downside.
 The way it works, the response's status and headers will be sent as soon has
 your ring handler is done. It means that middleware that would modify the
-response (or interceptor having a `:leave` function) will have no effect.
+response (or interceptors having a `:leave` function) will have no effect.
 
 ### `starfederation.datastar.clojure.adapter.http-kit2`
 
@@ -51,10 +50,10 @@ the last to finish before handing the response to the adapter.
 
 ### Detecting a closed connection
 
-Http-kit detects closed connection by itself. When so the `on-close` callback of
-`->sse-response` will be called.
+Http-kit detects closed connections by itself. When it dos the `on-close`
+callback of `->sse-response` will be called.
 
 ### SSE connection lifetime
 
-The connection stays alive until the client or the server closes it regardless
-of the ring API (sync vs async) you are using.
+The connection stays alive until the client or your code explicitly closes it
+server side regardless of the ring API (sync vs async) you are using.

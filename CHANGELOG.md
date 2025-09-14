@@ -1,12 +1,12 @@
 # Release notes for the Clojure SDK
 
-## 2025-09-11 - RC2
+## 2025-09-14 - RC2
 
 This release is mostly centered around documentation and cljdoc compatibility.
 
 ### Changes
 
-- We now depend on http-kit `v2.9.0-beta2`
+- Several dependencies have been updated
 - Libraries interdependencies are now explicit in their `deps.edn`
 - Malli schemas are now split into 3 libraries. This comes from the need to be
   cljdoc compatible
@@ -17,7 +17,9 @@ This release is mostly centered around documentation and cljdoc compatibility.
 - Several docstrings have been added / updated
 - There are new babashka tasks to help running a local cljdoc instance and
   ingesting the docs locally
-- The build process now adds libraries interdependencies automatically
+- The build process updates libraries interdependencies versions automatically
+- A warning about which Http-kit version to use has been added in the proper
+  README
 
 ### Fixed
 
