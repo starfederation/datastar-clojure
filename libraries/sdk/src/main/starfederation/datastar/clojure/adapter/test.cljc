@@ -28,8 +28,9 @@
 
 
 (defn ->sse-gen
-  "Returns a SSEGenerator that whose [[starfederation.datastar.clojure.protocols/send-event!]] implementation doesn't
-  send anything but return the string event that be sent instead."
+  "Returns a SSEGenerator whose
+  [[starfederation.datastar.clojure.protocols/send-event!]] implementation
+  is a stub that returns the event string instead of sending it."
   [& _]
   (->ReturnMsgGen))
 

@@ -341,7 +341,7 @@ Some scripts are provided:
     `:body` of the request)
 
   We do not impose any json parsing library. This means that you need to bring
-  your own to parse the returned valuue into Clojure data.
+  your own to parse the returned value into Clojure data.
   "
   [ring-request]
   (signals/get-signals ring-request))

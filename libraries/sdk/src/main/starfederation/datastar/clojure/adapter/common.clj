@@ -12,7 +12,7 @@
   - [[write!]]
   - [[content-encoding]]
 
-  With this 3 keys we can control buffering aspects of our SSE connction and
+  With these 3 keys we can control buffering aspects of our SSE connection and
   compression functionality.
 
   Here is an example profile which uses gzip and temporary buffers to
