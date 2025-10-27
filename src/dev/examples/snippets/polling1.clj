@@ -25,7 +25,7 @@
     {on-open
      (fn [sse]
        (d*/patch-elements! sse
-         (html [:div#time {:data-on-interval__duration.5s (d*/sse-get "/endpoint")}
+         (html [:div#time {:data-on:interval__duration.5s (d*/sse-get "/endpoint")}
                  (LocalDateTime/.format (LocalDateTime/now) formatter)]))
        (d*/close-sse! sse))}))
 

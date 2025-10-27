@@ -51,7 +51,7 @@
 
 (comment
   (= (->script-tag "console.log('hello')" {})
-     "<script data-on-load=\"el.remove()\">console.log('hello')</script>")
+     "<script data-init=\"el.remove()\">console.log('hello')</script>")
 
   (= (->script-tag "console.log('hello')"
                     {common/auto-remove false})
@@ -67,6 +67,6 @@
   (= (->script-tag "console.log('hello');\nconsole.log('world!!!')"
                   {common/auto-remove :true
                    common/attributes {:type "module" :data-something 1}})
-     "<script type=\"module\" data-something=\"1\" data-on-load=\"el.remove()\">console.log('hello');\nconsole.log('world!!!')</script>"))
+     "<script type=\"module\" data-something=\"1\" data-init=\"el.remove()\">console.log('hello');\nconsole.log('world!!!')</script>"))
 
 

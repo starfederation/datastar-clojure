@@ -1,5 +1,22 @@
 # Release notes for the Clojure SDK
 
+## 2025-10-27 - RC4
+This version's purpose is to transition the SDK to the new Datastar attribute
+syntax introduced in
+[v1.0.0-RC6](https://github.com/starfederation/datastar/releases/tag/v1.0.0-RC.6).
+
+
+### Changes
+- BREAKING: The SDK APIs remain the same except for 2
+  vars:
+  - `starfederation.datastar.clojure.api/CDN-url`
+  - `starfederation.datastar.clojure.api/CDN-map-url`
+
+  These now point to Datastar v1.0.0-RC6. If you use them,
+  updating to this version of the SDK will change your Datastar CDN import.
+  Your app will break until you transition to the new `:data-*` syntax.
+- Examples and tests now use the new syntax along with the RC6 js bundle.
+
 ## 2025-09-14 - RC3
 
 ### Fixed

@@ -37,7 +37,7 @@
         [:input {:type "text"
                  :id "input1"
                  :name "input-1"
-                 :data-bind-input1 true}]
+                 :data-bind:input1 true}]
 
 
         [:br]
@@ -48,48 +48,48 @@
          ;; GET
          [:div
           [:h4 "GET"]
-          [:button {               :data-on-click "@get('/endpoint')"}                        "get - no ct - no type"][:br]
-          [:button {:type "button" :data-on-click "@get('/endpoint')"}                        "get - no ct - type"][:br]
-          [:button {               :data-on-click "@get('/endpoint', {contentType: 'form'})"} "get - ct    - no type "][:br]
-          [:button {:type "button" :data-on-click "@get('/endpoint', {contentType: 'form'})"} "get - ct    -type"][:br]]
+          [:button {               :data-on:click "@get('/endpoint')"}                        "get - no ct - no type"][:br]
+          [:button {:type "button" :data-on:click "@get('/endpoint')"}                        "get - no ct - type"][:br]
+          [:button {               :data-on:click "@get('/endpoint', {contentType: 'form'})"} "get - ct    - no type "][:br]
+          [:button {:type "button" :data-on:click "@get('/endpoint', {contentType: 'form'})"} "get - ct    -type"][:br]]
 
           ;; POST
          [:div
           [:h4 "POST"]
-          [:button {               :data-on-click "@post('/endpoint')"}                        "post - no ct - no type"][:br]
-          [:button {:type "button" :data-on-click "@post('/endpoint')"}                        "post - no ct - type"][:br]
-          [:button {               :data-on-click "@post('/endpoint', {contentType: 'form'})"} "post - ct    - no type "][:br]
-          [:button {:type "button" :data-on-click "@post('/endpoint', {contentType: 'form'})"} "post - ct    -type"][:br]]
+          [:button {               :data-on:click "@post('/endpoint')"}                        "post - no ct - no type"][:br]
+          [:button {:type "button" :data-on:click "@post('/endpoint')"}                        "post - no ct - type"][:br]
+          [:button {               :data-on:click "@post('/endpoint', {contentType: 'form'})"} "post - ct    - no type "][:br]
+          [:button {:type "button" :data-on:click "@post('/endpoint', {contentType: 'form'})"} "post - ct    -type"][:br]]
 
          ;; PUT
          [:div
           [:h4 "PUT"]
-          [:button {               :data-on-click "@put('/endpoint')"}                        "put - no ct - no type"][:br]
-          [:button {:type "button" :data-on-click "@put('/endpoint')"}                        "put - no ct - type"][:br]
-          [:button {               :data-on-click "@put('/endpoint', {contentType: 'form'})"} "put - ct    - no type "][:br]
-          [:button {:type "button" :data-on-click "@put('/endpoint', {contentType: 'form'})"} "put - ct    -type"][:br]]
+          [:button {               :data-on:click "@put('/endpoint')"}                        "put - no ct - no type"][:br]
+          [:button {:type "button" :data-on:click "@put('/endpoint')"}                        "put - no ct - type"][:br]
+          [:button {               :data-on:click "@put('/endpoint', {contentType: 'form'})"} "put - ct    - no type "][:br]
+          [:button {:type "button" :data-on:click "@put('/endpoint', {contentType: 'form'})"} "put - ct    -type"][:br]]
 
          ;; PATCH
          [:div
           [:h4 "PATCH"]
-          [:button {               :data-on-click "@patch('/endpoint')"}                        "patch - no ct - no type"][:br]
-          [:button {:type "button" :data-on-click "@patch('/endpoint')"}                        "patch - no ct - type"][:br]
-          [:button {               :data-on-click "@patch('/endpoint', {contentType: 'form'})"} "patch - ct    - no type "][:br]
-          [:button {:type "button" :data-on-click "@patch('/endpoint', {contentType: 'form'})"} "patch - ct    -type"][:br]]
+          [:button {               :data-on:click "@patch('/endpoint')"}                        "patch - no ct - no type"][:br]
+          [:button {:type "button" :data-on:click "@patch('/endpoint')"}                        "patch - no ct - type"][:br]
+          [:button {               :data-on:click "@patch('/endpoint', {contentType: 'form'})"} "patch - ct    - no type "][:br]
+          [:button {:type "button" :data-on:click "@patch('/endpoint', {contentType: 'form'})"} "patch - ct    -type"][:br]]
 
          ;; DELETE
          [:div
           [:h4 "DELETE"]
-          [:button {               :data-on-click "@delete('/endpoint')"}                        "delete - no ct - no type"][:br]
-          [:button {:type "button" :data-on-click "@delete('/endpoint')"}                        "delete - no ct - type"][:br]
-          [:button {               :data-on-click "@delete('/endpoint', {contentType: 'form'})"} "delete - ct    - no type "][:br]
-          [:button {:type "button" :data-on-click "@delete('/endpoint', {contentType: 'form'})"} "delete - ct    -type"][:br]]]]
+          [:button {               :data-on:click "@delete('/endpoint')"}                        "delete - no ct - no type"][:br]
+          [:button {:type "button" :data-on:click "@delete('/endpoint')"}                        "delete - no ct - type"][:br]
+          [:button {               :data-on:click "@delete('/endpoint', {contentType: 'form'})"} "delete - ct    - no type "][:br]
+          [:button {:type "button" :data-on:click "@delete('/endpoint', {contentType: 'form'})"} "delete - ct    -type"][:br]]]]
        [:h3 "Outside form "]
        [:button
-        {:id "get-no-form", :data-on-click "@get('/endpoint')"}
+        {:id "get-no-form", :data-on:click "@get('/endpoint')"}
         "get no form"]
        [:button
-        {:id "post-no-form", :data-on-click "@post('/endpoint')"}
+        {:id "post-no-form", :data-on:click "@post('/endpoint')"}
         "post no form"]
 
        [:br]])))

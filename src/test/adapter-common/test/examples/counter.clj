@@ -49,7 +49,7 @@
   (hc/compile
     [:button
      {:id id
-      :data-on-click action}
+      :data-on:click action}
      text]))
 
 
@@ -58,7 +58,7 @@
                           dec sse-dec}}]
   (let [counter-id (str "counter" id)]
     (hc/compile
-      [:div {(keyword (str "data-signals-" counter-id)) "0"}
+      [:div {(keyword (str "data-signals:" counter-id)) "0"}
        (counter-button (->inc-id id) "inc" (inc counter-id))
        (counter-button (->dec-id id) "dec" (dec counter-id))
        [:span {:id counter-id

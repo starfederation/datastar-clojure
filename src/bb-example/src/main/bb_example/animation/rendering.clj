@@ -82,7 +82,7 @@
         rows (:x size)
         columns (:y size)
         !pc (volatile! (transient [:div.pseudo-canvas {:style (grid-style state)
-                                                       :data-on-click on-click}]))]
+                                                       :data-on:click on-click}]))]
     (doseq [r (range 1 (inc rows))
             c (range 1 (inc columns))]
       (vswap! !pc conj! (pseudo-pixel state r c)))
@@ -101,24 +101,24 @@
     [:div
      [:h3 "Controls"]
      [:ul.h-list
-      [:li [:button {:data-on-click (d*/sse-get "/refresh")} "refresh"]]
-      [:li [:button {:data-on-click (d*/sse-get "/reset")} "reset"]]
-      [:li [:button {:data-on-click (d*/sse-get "/random-10")} "add 10"]]
-      [:li [:button {:data-on-click (d*/sse-get "/step1")} "step1"]]
+      [:li [:button {:data-on:click (d*/sse-get "/refresh")} "refresh"]]
+      [:li [:button {:data-on:click (d*/sse-get "/reset")} "reset"]]
+      [:li [:button {:data-on:click (d*/sse-get "/random-10")} "add 10"]]
+      [:li [:button {:data-on:click (d*/sse-get "/step1")} "step1"]]
       (if (:animator state)
         (h/html
-          [:li [:button {:data-on-click (d*/sse-get "/pause")} "pause"]])
+          [:li [:button {:data-on:click (d*/sse-get "/pause")} "pause"]])
         (h/html
-          [:li [:button {:data-on-click (d*/sse-get "/play")} "play"]]))]
+          [:li [:button {:data-on:click (d*/sse-get "/play")} "play"]]))]
 
-     [:ul.h-list {:data-signals-rows    (-> state :size :x)
-                  :data-signals-columns (-> state :size :y)}
+     [:ul.h-list {:data-signals:rows    (-> state :size :x)
+                  :data-signals:columns (-> state :size :y)}
       [:li "rows: "    [:input {:type "number"
                                 :data-bind "rows"
-                                :data-on-change (d*/sse-post "/resize")}]]
+                                :data-on:change (d*/sse-post "/resize")}]]
       [:li "columns: " [:input {:type "number"
                                 :data-bind "columns"
-                                :data-on-change (d*/sse-post "/resize")}]]]]))
+                                :data-on:change (d*/sse-post "/resize")}]]]]))
 
 
 (defn log-pane [state]
@@ -170,7 +170,7 @@
 (defn page [state]
   (h/html
     (c/page-scaffold
-      [:div {:data-on-load (d*/sse-get "/updates")}
+      [:div {:data-init (d*/sse-get "/updates")}
        [:style (h/raw css)]
        [:h2.center "Babashka Test"]
        (content state)])))

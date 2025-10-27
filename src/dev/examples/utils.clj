@@ -19,7 +19,7 @@
   `(binding [*out* (java.io.OutputStreamWriter. System/out)]
      ~@body))
 
- 
+
 (defn pp-request [req]
  (-> req
      (dissoc :reitit.core/match :reitit.core/router)
