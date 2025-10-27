@@ -45,12 +45,12 @@
                  :name input-id}]
         [:br]
         [:button {:id get-button-id
-                  :data-on-click (form-get "/form/endpoint")}
+                  :data-on:click (form-get "/form/endpoint")}
          "Form get"]
 
         [:br]
         [:button {:id post-button-id
-                  :data-on-click (form-post "/form/endpoint")}
+                  :data-on:click (form-post "/form/endpoint")}
          "Form post"]
 
 

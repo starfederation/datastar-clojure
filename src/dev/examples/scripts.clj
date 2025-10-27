@@ -15,7 +15,7 @@
   (h/html
     (c/page-scaffold
       [[:h1 "Test page"]
-       [:button {:data-on-click (d*/sse-get "/endpoint")}
+       [:button {:data-on:click (d*/sse-get "/endpoint")}
         "Say hello!"]])))
 
 

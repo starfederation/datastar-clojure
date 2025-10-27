@@ -16,9 +16,9 @@
   (h/html
     (c/page-scaffold
       [[:h1 "Test page"]
-       [:input {:type "text" :data-bind-input true :required true}]
-       [:button {:data-attr-disabled "!$input"
-                 :data-on-click (str (d*/sse-get "/add-fragment")
+       [:input {:type "text" :data-bind:input true :required true}]
+       [:button {:data-attr:disabled "!$input"
+                 :data-on:click (str (d*/sse-get "/add-fragment")
                                      "; $input = ''")}
         "Send input"]
        [:br]
@@ -42,7 +42,7 @@
   (h/html
     [:li {:id id}
      val
-     [:button {:data-on-click (d*/sse-post (str "/remove-fragment/" id))} "remove me"]]))
+     [:button {:data-on:click (d*/sse-post (str "/remove-fragment/" id))} "remove me"]]))
 
 
 (defn add-element [req]

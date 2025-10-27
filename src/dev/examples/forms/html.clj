@@ -17,7 +17,7 @@
         [:input {:type "text"
                  :id "input1"
                  :name "input1"
-                 :data-bind-input1 true}]
+                 :data-bind:input1 true}]
         [:button "submit"]]
        [:div result]])))
 
@@ -38,7 +38,7 @@
         [:input {:type "text"
                  :id "input1"
                  :name "input1"
-                 :data-bind-input1 true}]
+                 :data-bind:input1 true}]
         [:button "submit"]]
        [:div result]])))
 

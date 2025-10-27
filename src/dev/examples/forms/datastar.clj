@@ -26,11 +26,11 @@
       [:div
        [:h2 "Html GET form"]
        [:form {:action ""
-               :data-on-submit "@get('/datastar/get', {contentType: 'form'})"} "submit"
+               :data-on:submit "@get('/datastar/get', {contentType: 'form'})"} "submit"
         [:input {:type "text"
                  :id "input1"
                  :name "input1"
-                 :data-bind-input1 true}]
+                 :data-bind:input1 true}]
         [:button "submit"]]
        (result-area result)])))
 
@@ -56,11 +56,11 @@
     (c/page-scaffold
       [:div
        [:h2 "Html POST form !!!!"]
-       [:form {:action "" :data-on-submit "@post('/datastar/post', {contentType: 'form'})"}
+       [:form {:action "" :data-on:submit "@post('/datastar/post', {contentType: 'form'})"}
         [:input {:type "text"
                  :id "input1"
                  :name "input1"
-                 :data-bind-input1 true}]
+                 :data-bind:input1 true}]
         [:button "submit"]]
        (result-area result)])))
 

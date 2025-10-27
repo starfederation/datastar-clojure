@@ -47,7 +47,7 @@
 - `bb run test:bb`: run unit tests for the SDK in Babashka.
 - `bb run test:sdk-common`: start the server used to run the
   [SDKs' common tests](https://github.com/starfederation/datastar/tree/develop/sdk/tests).
-- `bb run test:sdk-common`: run the common SDK test (go program)
+- `bb run test:sdk-common-go`: run the common SDK test (go program)
 
 ### Cljdoc tasks
 

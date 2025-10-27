@@ -31,7 +31,7 @@
                         "5"
                         "1")]
          (d*/patch-elements! sse
-           (html [:div#time {(str "data-on-interval__duration." duration "s")
+           (html [:div#time {(str "data-on:interval__duration." duration "s")
                              (d*/sse-get "/endpoint")}
                    current-time]))
 

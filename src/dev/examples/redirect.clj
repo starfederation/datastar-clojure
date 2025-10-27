@@ -15,7 +15,7 @@
     (c/page-scaffold
      [[:h1 "Test page"]
       [:div.#indicator
-       [:button {:data-on-click (d*/sse-get "/redirect-me")}
+       [:button {:data-on:click (d*/sse-get "/redirect-me")}
         "Start redirect"]]])))
 
 

@@ -22,8 +22,8 @@
   (h/html
     (c/page-scaffold
      [[:h1 "Test page"]
-      [:input {:type "text" :data-bind-input true}]
-      [:button {:data-on-click (d*/sse-get "/endpoint")} "Send input"]
+      [:input {:type "text" :data-bind:input true}]
+      [:button {:data-on:click (d*/sse-get "/endpoint")} "Send input"]
       [:br]
       [:span {:data-text "$input"}]
       [:br]
