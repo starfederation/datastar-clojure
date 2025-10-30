@@ -1,12 +1,13 @@
 # Release notes for the Clojure SDK
 
-## 2025-10-27 - RC4
+## 2025-10-30 - RC4
+
 This version's purpose is to transition the SDK to the new Datastar attribute
 syntax introduced in
 [v1.0.0-RC6](https://github.com/starfederation/datastar/releases/tag/v1.0.0-RC.6).
 
-
 ### Changes
+
 - BREAKING: The SDK APIs remain the same except for 2
   vars:
   - `starfederation.datastar.clojure.api/CDN-url`
@@ -20,6 +21,7 @@ syntax introduced in
 ## 2025-09-14 - RC3
 
 ### Fixed
+
 Fixed the scm info that goes in `pom.xml` files.
 
 ## 2025-09-14 - RC2
