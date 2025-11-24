@@ -44,7 +44,6 @@
 (defn ping-handler
   ([req]
    (when-let [coords (recover-coords req)]
-     (println "-- ping " coords)
      (state/add-ping! coords))
    {:status 204})
   ([req respond _raise]
@@ -53,7 +52,6 @@
 
 (defn random-pings-handler
   ([_req]
-   (println "-- add pixels")
    (state/add-random-pings!)
    {:status 204})
   ([req respond _raise]
@@ -63,7 +61,6 @@
 
 (defn reset-handler
   ([_req]
-   (println "-- reseting state")
    (state/reset-state!)
    {:status 204})
   ([req respond _raise]
@@ -71,7 +68,6 @@
 
 (defn step-handler
   ([_req]
-   (println "-- Step 1")
    (state/step-state!)
    {:status 204})
   ([req respond _raise]
@@ -82,7 +78,6 @@
 
 (defn play-handler
   ([_req]
-   (println "-- play animation")
    (state/start-animating!)
    {:status 204})
   ([req respond _raise]
@@ -91,7 +86,6 @@
 
 (defn pause-handler
   ([_req]
-   (println "-- pause animation")
    (state/stop-animating!)
    {:status 204})
   ([req respond _raise]
@@ -100,7 +94,6 @@
 (defn resize-handler
   ([req]
    (let [{x "rows" y "columns"} (c/get-signals req)]
-     (println "-- resize" x y)
      (state/resize! x y)
      {:status 204}))
   ([req respond _raise]

@@ -57,7 +57,7 @@
 
 
 (defn cell-style [v]
-  (str "background-color: "v";}"))
+  (str "background-color: "v";"))
 
 
 (def on-click

@@ -405,7 +405,7 @@
 
 (defn default-on-exception
   "Default [[on-exception]] callback, it returns `true` on [[IOException]] which
-  closes, the generator. It rethrows the exception wrapped with `ex-infor`
+  closes, the generator. It rethrows the exception wrapped with `ex-info`
   otherwise."
   [_sse e ctx]
   (if (instance? IOException e)

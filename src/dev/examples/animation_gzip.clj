@@ -85,6 +85,3 @@
   (u/clear-terminal!)
   (u/reboot-hk-server! #'handler-http-kit)
   (u/reboot-jetty-server! #'handler-ring {:async? true}))
-
-
-
