@@ -23,12 +23,18 @@
   "Returns a ring response that will start a SSE stream.
 
   The status code will be either 200 or the user provided one.
+
   Specific SSE headers are set automatically, the user provided ones will be
   merged. The response body is a sse generator implementing
   `ring.core.protocols/StreamableResponseBody`.
 
+
+  The body is a special value that is part of the SSE machinery and should not
+  be used directly. In other words you must only interact with the SSEGen
+  provided as argument of the different callbacks described below.
+
   In sync mode, the connection is closed automatically when the handler is
-  done running. You need to explicitely close it in rinc async.
+  done running. You need to explicitly close it in rinc async.
 
   Opts:
   - `:status`: status for the HTTP response, defaults to 200
@@ -52,9 +58,7 @@
   "
   [ring-request {:keys [status] :as opts}]
   {:pre [(ac/on-open opts)]}
-  (let [sse-gen (impl/->sse-gen)]
-    {:status (or status 200)
-     :headers (ac/headers ring-request opts)
-     :body sse-gen
-     ::impl/opts opts}))
-
+  {:status     (or status 200)
+   :headers    (ac/headers ring-request opts)
+   :body       (impl/->sse-gen)
+   ::impl/opts opts})
