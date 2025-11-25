@@ -1,4 +1,6 @@
-(ns starfederation.datastar.clojure.api.common)
+(ns starfederation.datastar.clojure.api.common
+  (:require
+   [clojure.string :as string]))
 
 ;; -----------------------------------------------------------------------------
 ;; Option names
@@ -41,12 +43,12 @@
 
 (defn add-data-lines!
   "Add several data-lines to the `data-lines!` transient vector."
-  [data-lines! prefix lines-seq]
+  [data-lines! prefix text]
   (reduce
     (fn [acc part]
       (conj! acc (str prefix part)))
     data-lines!
-    lines-seq))
+    (string/split-lines text)))
 
 
 (defn add-boolean-option?
@@ -56,6 +58,3 @@
   (and
     (boolean? val)
     (not= val default-val)))
-
-
-

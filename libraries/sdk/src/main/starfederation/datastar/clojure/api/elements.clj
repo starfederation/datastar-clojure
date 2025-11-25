@@ -30,7 +30,7 @@
     (cond-> data-lines!
       (and sel (valid-selector? sel))
       (common/add-opt-line! consts/selector-dataline-literal sel)
- 
+
       (and patch-mode (add-epm? patch-mode))
       (common/add-opt-line! consts/mode-dataline-literal patch-mode)
 
@@ -47,8 +47,7 @@
   [data-lines! element]
   (cond-> data-lines!
     (u/not-empty-string? element)
-    (common/add-data-lines! consts/elements-dataline-literal
-                            (string/split-lines element))))
+    (common/add-data-lines! consts/elements-dataline-literal element)))
 
 
 (defn ->patch-elements
@@ -91,13 +90,15 @@
 (defn conj-patch-elements-seq
   "Adds a the data-lines when patching a seq of strings elements."
   [data-lines! elements-seq]
-  (cond-> data-lines!
-    (seq elements-seq)
-    (common/add-data-lines! consts/elements-dataline-literal
-                            (eduction
-                              (comp (mapcat string/split-lines)
-                                    (remove string/blank?))
-                              elements-seq))))
+  (if (seq elements-seq)
+    (reduce
+      (fn [data-lines! elements]
+        (if (string/blank? elements)
+          data-lines!
+          (common/add-data-lines! data-lines! consts/elements-dataline-literal elements)))
+      data-lines!
+      elements-seq)
+    data-lines!))
 
 
 (defn ->patch-elements-seq
@@ -146,5 +147,3 @@
   (patch-elements! sse-gen "" (assoc opts
                                      common/selector selector
                                      common/patch-mode consts/element-patch-mode-remove)))
-
-

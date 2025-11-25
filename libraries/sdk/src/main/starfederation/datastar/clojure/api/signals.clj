@@ -21,8 +21,7 @@
         (common/add-opt-line! consts/only-if-missing-dataline-literal oim)
 
         (u/not-empty-string? signals)
-        (common/add-data-lines! consts/signals-dataline-literal
-                                (string/split-lines signals))))))
+        (common/add-data-lines! consts/signals-dataline-literal signals)))))
 
 
 
@@ -30,7 +29,7 @@
   (= (->patch-signals "{'some': \n 'json'}" {})
      ["signals {'some': "
       "signals  'json'}"]))
- 
+
 (defn patch-signals! [sse-gen signals-content opts]
   (try
     (sse/send-event! sse-gen
@@ -56,5 +55,3 @@
   (if (= :get (:request-method request))
     (get-in request [:query-params consts/datastar-key])
     (:body request)))
-
-
