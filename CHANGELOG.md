@@ -6,6 +6,11 @@
 - Fixed `starfederation.datastar.clojure.adapter.http-kit2/wrap-start-responding`,
   the async arity was improperly managed.
 
+### Changes
+- The internals of the Ring SSE generator have been reworked. The SSE gen won't error
+  if a user reuses it for different requests anymore. Documentation is in place to warn
+  against such reuse and this change makes for much simpler code.
+
 ## 2025-10-30 - RC4
 
 This version's purpose is to transition the SDK to the new Datastar attribute
