@@ -1,5 +1,11 @@
 # Release notes for the Clojure SDK
 
+## 2025-11-27 - RC5
+
+### Fixed
+- Fixed `starfederation.datastar.clojure.adapter.http-kit2/wrap-start-responding`,
+  the async arity was improperly managed.
+
 ## 2025-10-30 - RC4
 
 This version's purpose is to transition the SDK to the new Datastar attribute
