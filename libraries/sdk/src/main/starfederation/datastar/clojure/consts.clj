@@ -2,8 +2,7 @@
 (ns starfederation.datastar.clojure.consts)
 
 
-(def datastar-key                  "datastar")
-(def version                       "1.0.0-RC.1")
+(def datastar-key "datastar")
 
 
 ;; -----------------------------------------------------------------------------
@@ -13,10 +12,6 @@
   "The default duration for retrying SSE on connection reset. This is part of the underlying retry mechanism of SSE."
   1000)
 
-
-;; -----------------------------------------------------------------------------
-;; Default values
-;; -----------------------------------------------------------------------------
 
 ;; -----------------------------------------------------------------------------
 ;; Dataline literals
