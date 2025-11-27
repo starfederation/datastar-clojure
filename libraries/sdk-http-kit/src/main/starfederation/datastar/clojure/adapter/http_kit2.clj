@@ -124,10 +124,11 @@
      (let [response (handler req)]
        (start-responding! response)
        response))
-    ([req respond _raise]
-     (let [response (handler req)]
-       (start-responding! response)
-       (respond response)))))
+    ([req respond raise]
+     (let [respond' (fn [response]
+                      (start-responding! response)
+                      (respond response))]
+       (handler req respond' raise)))))
 
 
 (def start-responding-middleware
@@ -148,4 +149,3 @@
             (let [response (:response ctx)]
               (start-responding! response)
               ctx))})
-
