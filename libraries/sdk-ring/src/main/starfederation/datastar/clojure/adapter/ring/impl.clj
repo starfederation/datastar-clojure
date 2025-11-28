@@ -47,7 +47,7 @@
       ;; flush the HTTP headers as soon as possible
       (.flush ^OutputStream output-stream)
 
-      ;; Call on-open
+      ;; SSE connection is ready we call user code
       (on-open this)))
 
   p/SSEGenerator
