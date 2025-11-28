@@ -3,13 +3,20 @@
 ## 2025-11-27 - RC5
 
 ### Fixed
+
 - Fixed `starfederation.datastar.clojure.adapter.http-kit2/wrap-start-responding`,
   the async arity was improperly managed.
 
 ### Changes
+
 - The internals of the Ring SSE generator have been reworked. The SSE gen won't error
   if a user reuses it for different requests anymore. Documentation is in place to warn
   against such reuse and this change makes for much simpler code.
+- When creating SSE events we need to split on end of lines the text that will
+  constitute the data lines of the event. This can prevent SSE event injection
+  problems. The SSE machinery has been refactored so that this splitting happens
+  in a code path that all API functions go through instead of doing it in every
+  d* patch function. This way we can't forget that splitting.
 
 ## 2025-10-30 - RC4
 
