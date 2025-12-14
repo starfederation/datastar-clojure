@@ -1,4 +1,6 @@
-(ns starfederation.datastar.clojure.api.common)
+(ns starfederation.datastar.clojure.api.common
+  (:require
+   [clojure.string :as string]))
 
 ;; -----------------------------------------------------------------------------
 ;; Option names
@@ -30,7 +32,7 @@
   "Add an option `v` line to the transient `data-lines!` vector.
 
   Args:
-  - `data-lines`: a transient vector of data-lines that will be written in a sse
+  - `data-lines!`: a transient vector of data-lines that will be written in a sse
     event
   - `prefix`: The Datastar specific preffix for that line
   - `v`: the value for that line
@@ -41,13 +43,13 @@
 
 (defn add-data-lines!
   "Add several data-lines to the `data-lines!` transient vector."
-  [data-lines! prefix lines-seq]
-  (reduce
-    (fn [acc part]
-      (conj! acc (str prefix part)))
-    data-lines!
-    lines-seq))
-
+  [data-lines! prefix ^String text]
+  (let [stream (.lines text)
+        i (.iterator stream)]
+    (loop [acc data-lines!]
+      (if (.hasNext i)
+        (recur (conj! acc (str prefix (.next i))))
+        acc))))
 
 (defn add-boolean-option?
   "Utility used to test whether an boolean option should result in a sse event
@@ -56,6 +58,3 @@
   (and
     (boolean? val)
     (not= val default-val)))
-
-
-
