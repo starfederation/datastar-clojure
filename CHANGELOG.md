@@ -1,6 +1,6 @@
 # Release notes for the Clojure SDK
 
-## 2025-11-27 - RC5
+## 2025-12-14 - RC5
 
 ### Fixed
 

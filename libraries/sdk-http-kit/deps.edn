@@ -1,10 +1,10 @@
 {:paths   ["src/main"]
- :deps    {dev.data-star.clojure/sdk {:mvn/version "1.0.0-RC4"}
+ :deps    {dev.data-star.clojure/sdk {:mvn/version "1.0.0-RC5"}
            http-kit/http-kit         {:mvn/version "2.9.0-beta2"}}
  :aliases {:build {:deps       {io.github.clojure/tools.build {:git/tag "v0.10.10"
                                                                :git/sha "deedd62"}
                                 slipset/deps-deploy           {:mvn/version "0.2.2"}}
                    :ns-default build}
            :neil  {:project {:name    dev.data-star.clojure/http-kit
-                             :version "1.0.0-RC4"
+                             :version "1.0.0-RC5"
                              :description "http-kit adapter for the Datastar SDK"}}}}
