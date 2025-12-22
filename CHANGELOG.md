@@ -1,5 +1,14 @@
 # Release notes for the Clojure SDK
 
+## 2025-12-22 - RC6
+### Added
+- Patch elements functions in the SDK now provide the namespace option introduced in
+  [Datastar RC7](https://github.com/starfederation/datastar/releases/tag/v1.0.0-RC.7).
+
+### Changes
+- Urls for the Datastar CDN provided in the API now point to
+  [Datastar RC7](https://github.com/starfederation/datastar/releases/tag/v1.0.0-RC.7).
+
 ## 2025-12-14 - RC5
 
 ### Fixed

@@ -12,12 +12,14 @@
 ;; -----------------------------------------------------------------------------
 (def ^:private valid-selector? u/not-empty-string?)
 
-(defn- add-epm? [fmm]
-  (and fmm (not= fmm consts/default-element-patch-mode)))
+(defn- add-epm? [patch-mode]
+  (not= patch-mode consts/default-element-patch-mode))
 
 (defn- add-view-transition? [v]
   (common/add-boolean-option? consts/default-elements-use-view-transitions v))
 
+(defn add-namespace? [namespace]
+  (not= consts/default-element-namespace namespace))
 
 (defn conj-patch-element-opts!
   "Conj the optional data-lines to the transient `data-lines` vector.
@@ -25,7 +27,8 @@
   [data-lines! opts]
   (let [sel (common/selector opts)
         patch-mode (common/patch-mode opts)
-        use-vt (common/use-view-transition opts)]
+        use-vt (common/use-view-transition opts)
+        namespace (common/element-namespace opts)]
 
     (cond-> data-lines!
       (and sel (valid-selector? sel))
@@ -35,7 +38,10 @@
       (common/add-opt-line! consts/mode-dataline-literal patch-mode)
 
       (and use-vt (add-view-transition? use-vt))
-      (common/add-opt-line! consts/use-view-transition-dataline-literal use-vt))))
+      (common/add-opt-line! consts/use-view-transition-dataline-literal use-vt)
+
+      (and namespace (add-namespace? namespace))
+      (common/add-opt-line! consts/namespace-dataline-literal namespace))))
 
 
 
@@ -76,10 +82,12 @@
   (= (->patch-elements "<div>hello</div> \n<div>world!!!</div>"
                        {common/selector "#toto"
                         common/patch-mode consts/element-patch-mode-after
-                        common/use-view-transition true})
+                        common/use-view-transition true
+                        common/element-namespace "svg"})
      ["selector #toto"
       "mode after"
       "useViewTransition true"
+      "namespace svg"
       "elements <div>hello</div> "
       "elements <div>world!!!</div>"]))
 

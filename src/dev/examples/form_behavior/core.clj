@@ -125,9 +125,8 @@
 (def router
   (rr/router
     [["/" {:handler form}]
-     ["/endpoint"    {:handler process-form}]
+     ["/endpoint"    {:handler process-form}]]))
                       ;:parameters {:multipart true} :middleware [mpparams/multipart-middleware]}]
-     c/datastar-route]))
 
 
 (def handler
@@ -137,4 +136,5 @@
 
 
 (comment
-  (u/reboot-hk-server! #'handler))
+  (u/reboot-hk-server! #'handler)
+  (user/clear-terminal!))

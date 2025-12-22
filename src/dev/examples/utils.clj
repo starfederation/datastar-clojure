@@ -1,6 +1,7 @@
 (ns examples.utils
   (:require
     [charred.api                         :as charred]
+    [clojure.java.io                     :as io]
     [fireworks.core                      :refer [?]]
     [puget.printer                       :as pp]
     [starfederation.datastar.clojure.api :as d*]))
@@ -9,15 +10,37 @@
 ;; -----------------------------------------------------------------------------
 ;; Misc utils
 ;; -----------------------------------------------------------------------------
-(defn clear-terminal! []
-  (binding [*out* (java.io.PrintWriter. System/out)]
+(defn- safe-requiring-resolve [sym]
+  (try
+    (deref (requiring-resolve sym))
+    (catch Exception _ nil)))
+
+
+(def original-out
+  (or
+    (:out (safe-requiring-resolve 'cider.nrepl.middleware.out/original-output))
+    System/out))
+
+
+(def original-err
+  (or
+    (:err (safe-requiring-resolve 'cider.nrepl.middleware.out/original-output))
+    System/err))
+
+
+(defmacro force-out
+  "Binds [[*out*]] to the original system's out."
+  [& body]
+  `(binding [*out* (io/writer original-out)]
+     ~@body))
+
+
+(defn clear-terminal!
+  "Clear the terminal of all text"
+  []
+  (force-out
     (print "\033c")
     (flush)))
-
-
-(defmacro force-out [& body]
-  `(binding [*out* (java.io.OutputStreamWriter. System/out)]
-     ~@body))
 
 
 (defn pp-request [req]

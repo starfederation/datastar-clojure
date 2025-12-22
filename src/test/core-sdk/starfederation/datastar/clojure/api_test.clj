@@ -16,7 +16,7 @@
 ;; -----------------------------------------------------------------------------
 (defn event-beginning
   "Alternate, simplified implementation of
-  [starfederation.datastar.clojure.api.sse/write-event!]"
+  [[starfederation.datastar.clojure.api.sse/write-event!]]"
   [event-type & {id             d*/id
                  retry-duration d*/retry-duration}]
   (cond-> [(format "event: %s" event-type)]
@@ -99,6 +99,10 @@
 (def use-view-transition-line
   (->data-line consts/use-view-transition-dataline-literal true))
 
+(def test-namespace consts/element-namespace-svg)
+(def namespace-line
+  (->data-line consts/namespace-dataline-literal test-namespace))
+
 (def ->element-line (partial ->data-line consts/elements-dataline-literal))
 
 ;; -----------------------------------------------------------------------------
@@ -145,6 +149,18 @@
              (event patch-element-t (list* use-view-transition-line expected-datalines)))))
 
 
+(defn patch-ns-html-test
+  "Patch-elements test case using the default namespace."
+  [tested-patch-fn input expected-datalines]
+  (expect (= (tested-patch-fn (at/->sse-gen) input {d*/element-ns d*/ns-html})
+             (event patch-element-t expected-datalines))))
+
+(defn patch-ns-svg-test
+  "Patch-elements test case using the svg namespace."
+  [tested-patch-fn input expected-datalines]
+  (expect (= (tested-patch-fn (at/->sse-gen) input {d*/element-ns d*/ns-svg})
+             (event patch-element-t (list* namespace-line expected-datalines)))))
+
 (defn patch-all-options-test
   "All options, we see all additional lines."
   [tested-patch-fn input expected-datalines]
@@ -152,12 +168,14 @@
                               input
                               {d*/selector basic-selector
                                d*/patch-mode test-merge-mode
-                               d*/use-view-transition true})
+                               d*/use-view-transition true
+                               d*/element-ns d*/ns-svg})
              (event patch-element-t
                     (list*
                       selector-line
                       patch-mode-line
                       use-view-transition-line
+                      namespace-line
                       expected-datalines)))))
 
 
@@ -188,6 +206,13 @@
         (patch-vt-non-bool-test d*/patch-elements! div-element div-data))
       (specify "view transition on true"
         (patch-vt-true-test d*/patch-elements! div-element div-data)))
+
+
+    (describe "handles namespaces"
+      (specify "no ns on default value"
+        (patch-ns-html-test d*/patch-elements! div-element div-data))
+      (specify "svg ns when specified"
+        (patch-ns-svg-test d*/patch-elements! div-element div-data)))
 
     (it "handles all options"
       (patch-all-options-test      d*/patch-elements! div-element div-data))))
@@ -227,6 +252,12 @@
         (patch-vt-non-bool-test d*/patch-elements-seq! multi-elements multi-data))
       (specify "view transition on true"
         (patch-vt-true-test d*/patch-elements-seq! multi-elements multi-data)))
+
+    (describe "handles namespaces"
+      (specify "no ns on default value"
+        (patch-ns-html-test d*/patch-elements-seq! multi-elements multi-data))
+      (specify "svg ns when specified"
+        (patch-ns-svg-test d*/patch-elements-seq! multi-elements multi-data)))
 
     (it "handles all options"
       (patch-all-options-test      d*/patch-elements-seq! multi-elements multi-data))))
@@ -323,5 +354,3 @@
 
 (comment
   (ltr/run-test-var #'test-execute-script!))
-
-

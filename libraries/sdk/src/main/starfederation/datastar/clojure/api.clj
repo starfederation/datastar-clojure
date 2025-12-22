@@ -16,6 +16,7 @@ These function take options map whose keys are:
 - [[selector]]
 - [[patch-mode]]
 - [[use-view-transition]]
+- [[element-ns]]
 - [[only-if-missing]]
 - [[auto-remove]]
 - [[attributes]]
@@ -54,13 +55,13 @@ Some scripts are provided:
 ;; -----------------------------------------------------------------------------
 (def CDN-url
   "URL for the Datastar js bundle tracking the latest Datastar, currently
-  v1.0.0-RC6."
+  v1.0.0-RC7."
 
-  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.6/bundles/datastar.js")
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js")
 
 (def CDN-map-url
   "URL for the Datastar source map going with [[CDN-url]]."
-  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.6/bundles/datastar.js.map")
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js.map")
 
 ;; -----------------------------------------------------------------------------
 ;; SSE generator management
@@ -180,6 +181,17 @@ Some scripts are provided:
   Datastar client side will default to false."
   common/use-view-transition)
 
+
+(def element-ns
+  "[[patch-elements!]] & [[patch-elements-seq!]] option, boolean:
+
+  Use a namespace when patching elements.
+  Possible values are:
+  - [[ns-html]] default
+  - [[ns-svg]]
+  - [[ns-mathml]]"
+  common/element-namespace)
+
 ;;Signals opts
 (def only-if-missing
   "[[patch-signals!]] option, boolean:
@@ -240,6 +252,17 @@ Some scripts are provided:
   related state."
   consts/element-patch-mode-replace)
 
+(def ns-html
+  "element namespace: default html namespace"
+  consts/element-namespace-html)
+
+(def ns-svg
+  "element namespace: svg namespace"
+  consts/element-namespace-svg)
+
+(def ns-mathml
+  "element namespace: mathMl namespace"
+  consts/element-namespace-mathml)
 
 (defn patch-elements!
   "Send HTML elements to the browser to be patchd into the DOM.
@@ -255,6 +278,7 @@ Some scripts are provided:
   - [[selector]]
   - [[patch-mode]]
   - [[use-view-transition]]
+  - [[element-ns]]
 
   Return value:
   - `false` if the connection is closed
@@ -378,7 +402,7 @@ Some scripts are provided:
    (scripts/execute-script! sse-gen script-text opts)))
 
 
- 
+
 ;; -----------------------------------------------------------------------------
 ;; SSE helpers
 ;; -----------------------------------------------------------------------------
@@ -483,4 +507,3 @@ Some scripts are provided:
   of the header means the request is issued from a datastar action."
   [request]
   (= "true" (get-in request [:headers "datastar-request"])))
-

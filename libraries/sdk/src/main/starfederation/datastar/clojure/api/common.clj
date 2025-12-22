@@ -1,6 +1,4 @@
-(ns starfederation.datastar.clojure.api.common
-  (:require
-   [clojure.string :as string]))
+(ns starfederation.datastar.clojure.api.common)
 
 ;; -----------------------------------------------------------------------------
 ;; Option names
@@ -14,6 +12,7 @@
 (def selector            :d*.elements/selector)
 (def patch-mode          :d*.elements/patch-mode)
 (def use-view-transition :d*.elements/use-view-transition)
+(def element-namespace   :d*.elements/namespace)
 
 ;;Signals opts
 (def only-if-missing     :d*.signals/only-if-missing)
