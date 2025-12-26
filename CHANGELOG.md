@@ -1,5 +1,9 @@
 # Release notes for the Clojure SDK
 
+## 2025-12-26 - RC7
+### Fix
+- The clj-kondo config from the sdk library is now properly added into the jar.
+
 ## 2025-12-22 - RC6
 ### Added
 - Patch elements functions in the SDK now provide the namespace option introduced in
