@@ -25,8 +25,7 @@
   (rr/router
     [["/" {:handler (constantly (rur/response home))}]
      ["" efh/routes]
-     ["" efd*/routes]
-     c/datastar-route]))
+     ["" efd*/routes]]))
 
 
 

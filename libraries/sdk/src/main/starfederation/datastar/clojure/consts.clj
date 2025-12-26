@@ -22,6 +22,7 @@
 (def use-view-transition-dataline-literal "useViewTransition ")
 (def signals-dataline-literal "signals ")
 (def only-if-missing-dataline-literal "onlyIfMissing ")
+(def namespace-dataline-literal "namespace ")
 
 
 ;; -----------------------------------------------------------------------------
@@ -79,6 +80,12 @@
   "Default value for ElementPatchMode.
   Morphs the element into the existing element."
   element-patch-mode-outer)
+
+;; Namespaces
+(def element-namespace-html   "html")
+(def element-namespace-svg    "svg")
+(def element-namespace-mathml "mathml")
+(def default-element-namespace element-namespace-html)
 
 
 ;; EventType
