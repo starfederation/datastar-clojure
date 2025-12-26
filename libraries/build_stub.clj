@@ -42,7 +42,7 @@
                              [:name "The MIT License"]
                              [:url (permalink "LICENSE.md")]]]
                            (conj scm [:tag (str "v" version)])]})
-  (b/copy-dir {:src-dirs ["src/main"]
+  (b/copy-dir {:src-dirs ["src/main" "resources"]
                :target-dir class-dir})
   (b/jar {:class-dir class-dir
           :jar-file jar-file}))
