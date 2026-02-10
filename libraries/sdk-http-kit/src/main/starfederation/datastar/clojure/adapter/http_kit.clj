@@ -26,6 +26,9 @@
   The status code and the the SSE specific headers are sent automatically
   before [[on-open]] is called.
 
+  Specific SSE headers are set automatically, the user provided ones will be
+  merged.
+
   Note that the SSE connection stays opened util you close it.
 
   General options:

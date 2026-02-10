@@ -8,6 +8,8 @@
     [reitit.ring :as rr]
     [reitit.ring.middleware.exception :as reitit-exception]
     [reitit.ring.middleware.parameters :as reitit-params]
+    [starfederation.datastar.clojure.adapter.aleph :as aleph]
+    ;; TODO: [starfederation.datastar.clojure.adapter.aleph-schemas]
     [starfederation.datastar.clojure.adapter.http-kit :as hk-gen]
     [starfederation.datastar.clojure.adapter.http-kit-schemas]
     [starfederation.datastar.clojure.adapter.ring :as ring-gen]
@@ -52,10 +54,17 @@
 (def handler-ring (->handler ring-gen/->sse-response
                              {ring-gen/write-profile ring-gen/gzip-profile}))
 
+
+(def handler-aleph (->handler aleph/->sse-response
+                              {aleph/write-profile (brotli/->brotli-profile)}))
+                              ;{aleph/write-profile aleph/gzip-profile}))
+
+
 (defn after-ns-reload []
   (println "rebooting servers")
   (u/reboot-hk-server! #'handler-http-kit)
-  (u/reboot-jetty-server! #'handler-ring {:async? true}))
+  (u/reboot-jetty-server! #'handler-ring {:async? true})
+  (u/reboot-aleph-server! #'handler-aleph))
 
 
 (comment
@@ -83,5 +92,6 @@
   (state/step-state!)
   (state/start-animating!)
   (u/clear-terminal!)
+  (u/reboot-aleph-server! #'handler-aleph)
   (u/reboot-hk-server! #'handler-http-kit)
   (u/reboot-jetty-server! #'handler-ring {:async? true}))

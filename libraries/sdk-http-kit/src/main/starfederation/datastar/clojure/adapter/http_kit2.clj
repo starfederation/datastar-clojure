@@ -46,6 +46,9 @@
 
   Note that the SSE connection stays opened util you close it.
 
+  Specific SSE headers are set automatically, the user provided ones will be
+  merged.
+
   General options:
   - `:status`: status for the HTTP response, defaults to 200.
   - `:headers`: ring headers map to add to the response.

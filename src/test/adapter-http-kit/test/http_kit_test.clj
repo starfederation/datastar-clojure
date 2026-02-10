@@ -1,72 +1,73 @@
 (ns test.http-kit-test
   (:require
-    [test.common :as common]
-    [test.examples.http-kit-handler :as hkh]
-    [lazytest.core :as lt :refer [defdescribe expect it]]
-    [org.httpkit.server :as hk-server]
+    [test.common                                      :as common]
+    [test.persistent-connection                       :as pc]
+    [test.smoketests                                  :as st]
+    [test.examples.http-kit-handler                   :as hkh]
+    [lazytest.core                                    :as lt :refer [defdescribe expect it]]
+    [org.httpkit.server                               :as hk-server]
     [starfederation.datastar.clojure.adapter.http-kit :as hk-gen]))
 
 ;; -----------------------------------------------------------------------------
 ;; HTTP-Kit stuff
 ;; -----------------------------------------------------------------------------
-(def http-kit-basic-opts
+(def http-kit-opts
   {:start! hk-server/run-server
    :stop!  hk-server/server-stop!
-   :get-port hk-server/server-port
    :legacy-return-value? false})
-
-
-;; -----------------------------------------------------------------------------
-(defdescribe counters-test
-  {:webdriver true
-   :context [(common/with-server-f hkh/handler http-kit-basic-opts)]}
-  (it "manages signals"
-    (doseq [[driver-type driver] common/drivers]
-      (let [res (common/run-counters! @driver)]
-        (expect (= res common/expected-counters) (str driver-type))))))
-
-
-(defdescribe counters-test-async
-  {:webdriver true
-   :context [(common/with-server-f hkh/handler (assoc http-kit-basic-opts
-                                                      :ring-async? true))]}
-  (it "manages signals"
-    (doseq [[driver-type driver] common/drivers]
-      (let [res (common/run-counters! @driver)]
-        (expect (= res common/expected-counters) (str driver-type))))))
 
 ;; -----------------------------------------------------------------------------
 ;; Tests
 ;; -----------------------------------------------------------------------------
-(defdescribe form-test
+(defdescribe smoke-tests
   {:webdriver true
-   :context [(common/with-server-f hkh/handler http-kit-basic-opts)]}
+   :context [(st/with-server-f (assoc http-kit-opts
+                                      :handler hkh/handler))]}
+  (it "manages signals"
+    (doseq [[driver-type driver] common/drivers]
+      (let [res (st/run-counters! @driver st/*port*)]
+        (expect (= res st/expected-counters) (str driver-type)))))
+
   (it "manages forms"
     (doseq [[driver-type driver] common/drivers]
-      (let [res (common/run-form-test! @driver)]
-        (expect (= res common/expected-form-vals) (str driver-type))))))
+      (let [res (st/run-forms! @driver st/*port*)]
+        (expect (= res st/expected-form-vals) (str driver-type))))))
+
+
+
+(defdescribe smoke-tests-async
+  {:webdriver true
+   :context [(st/with-server-f (assoc http-kit-opts
+                                      :handler hkh/handler
+                                      :ring-async? true))]}
+  (it "manages signals"
+    (doseq [[driver-type driver] common/drivers]
+      (let [res (st/run-counters! @driver st/*port*)]
+        (expect (= res st/expected-counters) (str driver-type)))))
+
+  (it "manages forms"
+    (doseq [[driver-type driver] common/drivers]
+      (let [res (st/run-forms! @driver st/*port*)]
+        (expect (= res st/expected-form-vals) (str driver-type))))))
 
 
 ;; -----------------------------------------------------------------------------
 (defdescribe persistent-sse-test
-  {:context [(common/persistent-sse-f hk-gen/->sse-response
-                                      http-kit-basic-opts)]}
   (it "handles persistent connections"
-    (let [res (common/run-persistent-sse-test!)]
+    (let [res (pc/run-test (assoc http-kit-opts
+                                  :->sse-response hk-gen/->sse-response))]
       (expect (map? res))
-      (expect (common/p-sse-status-ok? res))
-      (expect (common/p-sse-http1-headers-ok? res))
-      (expect (common/p-sse-body-ok? res)))))
+      (expect (pc/sse-status-ok? res))
+      (expect (pc/sse-http1-headers-ok? res))
+      (expect (pc/sse-body-ok? res)))))
 
 
 (defdescribe persistent-sse-test-async
-  {:context [(common/persistent-sse-f hk-gen/->sse-response
-                                      (assoc http-kit-basic-opts
-                                             :ring-async? true))]}
   (it "handles persistent connections"
-    (let [res (common/run-persistent-sse-test!)]
+    (let [res (pc/run-test (assoc http-kit-opts
+                                  :ring-async? true
+                                  :->sse-response hk-gen/->sse-response))]
       (expect (map? res))
-      (common/p-sse-status-ok? res)
-      (common/p-sse-http1-headers-ok? res)
-      (common/p-sse-body-ok? res))))
-
+      (pc/sse-status-ok? res)
+      (pc/sse-http1-headers-ok? res)
+      (pc/sse-body-ok? res))))

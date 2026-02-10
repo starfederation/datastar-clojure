@@ -1,5 +1,5 @@
 {:paths []
- 
+
  :deps {sdk/sdk                                        {:local/root "./libraries/sdk/"}
         io.github.tonsky/clojure-plus                  {:mvn/version "1.6.3"}
         io.github.paintparty/fireworks                 {:mvn/version "0.12.6"}
@@ -31,6 +31,7 @@
                        :test.paths/malli-schemas
                        :test.paths/brotli
                        :test.paths/adapter-common
+                       :test.paths/adapter-aleph
                        :test.paths/adapter-http-kit
                        :test.paths/adapter-ring
                        :test.paths/adapter-ring-jetty
@@ -46,13 +47,16 @@
 
 
   ;; Adapters aliases
+  :aleph         {:extra-deps {sdk/adapter-aleph              {:local/root "./libraries/sdk-aleph/"
+                                                               :exclusions [dev.data-star.clojure/sdk]}}}
+
   :http-kit      {:extra-deps {sdk/adapter-http-kit           {:local/root "./libraries/sdk-http-kit/"
                                                                :exclusions [dev.data-star.clojure/sdk]}}}
 
   :ring-jetty    {:extra-deps {sdk/adapter-ring               {:local/root "./libraries/sdk-ring/"
                                                                :exclusions [dev.data-star.clojure/sdk]}
                                ring/ring-jetty-adapter        {:mvn/version "1.15.0"}}}
- 
+
   :ring-rj9a     {:extra-deps {sdk/adapter-ring               {:local/root "./libraries/sdk-ring/"
                                                                :exclusions [dev.data-star.clojure/sdk]}
                                info.sunng/ring-jetty9-adapter {:mvn/version "0.38.0"}}}
@@ -78,6 +82,7 @@
   :test.paths/brotli             ["./libraries/sdk-brotli/src/main/"   "src/test/brotli"]
   :test.paths/malli-schemas      ["src/test/malli-schemas"]
   :test.paths/adapter-common     ["src/test/adapter-common"]
+  :test.paths/adapter-aleph      ["./libraries/sdk-aleph/src/main/"    "src/test/adapter-aleph"]
   :test.paths/adapter-ring       ["./libraries/sdk-ring/src/main/"     "src/test/adapter-ring"]
   :test.paths/adapter-ring-jetty ["./libraries/sdk-ring/src/main/"     "src/test/adapter-ring-jetty"]
   :test.paths/adapter-rj9a       ["./libraries/sdk-ring/src/main/"     "src/test/adapter-rj9a"]

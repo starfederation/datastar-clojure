@@ -37,7 +37,7 @@
 
 
 
-(deftype RecordMsgGen [lock !rec !open?]
+(defrecord RecordMsgGen [lock !rec !open?]
   p/SSEGenerator
   (send-event! [_ event-type data-lines opts]
     (u/lock! lock
@@ -57,6 +57,10 @@
       :clj [Closeable
             (close [this]
               (p/close-sse! this))]))
+
+
+(defn ->sse-recorder []
+  (->RecordMsgGen (ReentrantLock.) (volatile! []) (volatile! true)))
 
 
 (defn ->sse-response

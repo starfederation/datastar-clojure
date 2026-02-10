@@ -48,6 +48,5 @@
 
 
 (comment
-  (user/reload!)
   (require '[lazytest.repl :as ltr])
   (ltr/run-test-var #'simple-test))

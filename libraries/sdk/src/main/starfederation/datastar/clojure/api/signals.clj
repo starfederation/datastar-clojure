@@ -1,6 +1,5 @@
 (ns starfederation.datastar.clojure.api.signals
   (:require
-    [clojure.string :as string]
     [starfederation.datastar.clojure.api.common :as common]
     [starfederation.datastar.clojure.api.sse :as sse]
     [starfederation.datastar.clojure.consts :as consts]

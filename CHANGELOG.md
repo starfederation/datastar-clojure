@@ -1,5 +1,15 @@
 # Release notes for the Clojure SDK
 
+## 2026-02-13 - RC8
+### Fix
+- Some docs and examples where still using Datastar old syntax. This is now fixed.
+
+### Added
+- A new implementation of the SDK for the Aleph ring adapter has been added.
+
+### Changed
+- The tests have been refactored in order to be somewhat more legible and REPL friendly.
+
 ## 2025-12-26 - RC7
 ### Fix
 - The clj-kondo config from the sdk library is now properly added into the jar.

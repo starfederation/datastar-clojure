@@ -45,6 +45,8 @@
 (def libs
   #{:sdk
     :brotli
+    :aleph
+    :aleph-malli-schemas
     :http-kit
     :http-kit-malli-schemas
     :malli-schemas
