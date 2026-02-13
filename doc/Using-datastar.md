@@ -60,7 +60,7 @@ We can imagine a page with the following HTML:
 
 ```HTML
 <div>
-  <button data-on-click="@get(/'say-hello')">Say hello</button>
+  <button data-on:click="@get(/'say-hello')">Say hello</button>
   <p id="hello-field"></p>
 </div>
 ```
@@ -92,7 +92,7 @@ In the browser, when Datastar gets the patch it will morph the DOM to be:
 
 ```HTML
 <div>
-  <button data-on-click="@get(/'say-hello')">Say hello</button>
+  <button data-on:click="@get(/'say-hello')">Say hello</button>
   <p id="hello-field">Hello world!</p>
 </div>
 ```
@@ -125,7 +125,7 @@ Here we send 2 events. The first will morph the DOM into:
 
 ```HTML
 <div>
-  <button data-on-click="@get(/'say-hello')">Say hello</button>
+  <button data-on:click="@get(/'say-hello')">Say hello</button>
   <p id="hello-field">Hello</p>
 </div>
 ```
@@ -134,7 +134,7 @@ The second:
 
 ```HTML
 <div>
-  <button data-on-click="@get(/'say-hello')">Say hello</button>
+  <button data-on:click="@get(/'say-hello')">Say hello</button>
   <p id="hello-field">Hello world!</p>
 </div>
 ```
@@ -188,7 +188,7 @@ events occurred on the server.
 We can have a page setup this way:
 
 ```HTML
-<body data-on-load="/updates">
+<body data-on:load="/updates">
   <div id="main">
     Imagine a complex UI here
   </div>
