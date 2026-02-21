@@ -112,7 +112,8 @@
          (->brotli-os opts)
          ac/->os-writer))
    ac/write! (ac/->write-with-temp-buffer!)
-   ac/content-encoding brotli-content-encoding})
+   ac/content-encoding brotli-content-encoding
+   ac/custom-flush ac/double-flush})
 
 
 (defn ->brotli-buffered-writer-profile
@@ -131,6 +132,5 @@
          ac/->os-writer
          ac/->buffered-writer))
    ac/write! ac/write-to-buffered-writer!
-   ac/content-encoding brotli-content-encoding})
-
-
+   ac/content-encoding brotli-content-encoding
+   ac/custom-flush ac/double-flush})

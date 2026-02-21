@@ -7,13 +7,14 @@
   adapters.
 
   The main concept here is what we call \"write profiles\". A write profile is
-  a map of 3 keys:
+  a map of 4 keys:
   - [[wrap-output-stream]]
   - [[write!]]
   - [[content-encoding]]
+  - [[custom-flush]]
 
-  With these 3 keys we can control buffering aspects of our SSE connection and
-  compression functionality.
+  With these 4 keys we can control buffering aspects of our SSE connection and
+  compression functionality and flushing specific behavior.
 
   Here is an example profile which uses gzip and temporary buffers to
   concatenate SSE event text:
@@ -112,6 +113,21 @@
   - [[write-to-buffered-writer!]]
   "
   :d*.sse.write-profile/write!)
+
+
+(def custom-flush
+  "SSE write profile option:
+
+  A function `(fn [wrapped-os raw-os]...)` that handles the flushing in the
+  `send!` function of SSEGenerators.
+
+  - `wrapped-os`: the result of wrapping the `raw-os` with [[wrap-output-stream]]
+  - `raw-os`: the raw output stream provided by the ring adapter used.
+
+  Each adapter constructs a `send!` function based on a write profile. This
+  constructor function can use this option to get a custom flushing behavior.
+  "
+  :d*.sse.write-profile/custom-flush)
 
 
 (def content-encoding
@@ -222,9 +238,38 @@
 
 
 (defn flush
-  "Flush a `java.io.Flushable`."
+  "Flush a `java.io.Flushable`. This function type hints the flushable to prevent a reflection."
   [^Flushable f]
   (.flush f))
+
+
+(defn simple-flush
+  "Simple flushing function usable in write profile. It only flushes the `wrapped-os`
+  obtained with [[wrap-output-stream]] and leaves `raw-os` alone.
+
+  It is the counterpart of [[double-flush]] which flushes both.
+  "
+  [wrapped-os _raw-os]
+  (flush wrapped-os))
+
+
+(defn double-flush
+  "Special flushing function usable in write profiles with the [[custom-flush]]
+  option.
+
+  It takes 2 arguments:
+  - `wrapped-os`: the wrapped output stream obtained by using `wrap-output-stream`
+  - `raw-os`: the raw output stream passed to `wrap-output-stream`
+
+  Here we flush `wrapped-os` then flush `raw-os`. This may be need when using
+  brotli compression as flushing the brotli output stream may not mean flushing
+  the underlying one.
+
+  It is the counterpart of [[default-flush]] that only flushes the `wrapped-os`.
+  "
+  [wrapped-os raw-os]
+  (flush wrapped-os)
+  (flush raw-os))
 
 ;; -----------------------------------------------------------------------------
 ;; SDK provided write profiles
@@ -411,5 +456,3 @@
   (if (instance? IOException e)
     true
     (throw (ex-info "Error sending SSE event." ctx e))))
-
-

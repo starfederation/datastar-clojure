@@ -52,7 +52,8 @@
                                  {hk-gen/write-profile (brotli/->brotli-profile)}))
 
 (def handler-ring (->handler ring-gen/->sse-response
-                             {ring-gen/write-profile ring-gen/gzip-profile}))
+                             ;{ring-gen/write-profile ring-gen/gzip-profile}
+                             {ring-gen/write-profile (brotli/->brotli-buffered-writer-profile)}))
 
 
 (def handler-aleph (->handler aleph/->sse-response

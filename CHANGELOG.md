@@ -1,17 +1,22 @@
 # Release notes for the Clojure SDK
 
 ## 2026-02-13 - RC8
-### Fix
-- Some docs and examples where still using Datastar old syntax. This is now fixed.
+### Fixed
+- Some docs and examples were still using Datastar's old syntax. This is now
+  fixed.
+- Brolti compression now works for the Ring implementation of the SDK by using
+  the new `custom flush` option for write profiles.
 
 ### Added
+- New `custom-flush` option in write profiles allowing to have more control over
+  flushing behavior.
 - A new implementation of the SDK for the Aleph ring adapter has been added.
 
 ### Changed
 - The tests have been refactored in order to be somewhat more legible and REPL friendly.
 
 ## 2025-12-26 - RC7
-### Fix
+### Fixed
 - The clj-kondo config from the sdk library is now properly added into the jar.
 
 ## 2025-12-22 - RC6
