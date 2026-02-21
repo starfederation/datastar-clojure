@@ -50,7 +50,7 @@ the last to finish before handing the response to the adapter.
 
 ### Detecting a closed connection
 
-Http-kit detects closed connections by itself. When it dos the `on-close`
+Http-kit detects closed connections by itself. When it does the `on-close`
 callback of `->sse-response` will be called.
 
 ### SSE connection lifetime

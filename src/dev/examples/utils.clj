@@ -69,6 +69,12 @@
     (catch Exception _
       nil)))
 
+
+(defmacro vthread [& body]
+  `(.start (Thread/ofVirtual)
+           (fn []
+             ~@body)))
+
 ;; -----------------------------------------------------------------------------
 ;; httpkit server
 ;; -----------------------------------------------------------------------------
@@ -130,4 +136,19 @@
                            :join? false}
                           opts))))))
 
+;; -----------------------------------------------------------------------------
+;; Aleph server
+;; -----------------------------------------------------------------------------
+(defonce !aleph-server (atom nil))
 
+(def aleph-run! (rr 'aleph.http/start-server))
+(def aleph-stop! (fn [^java.io.Closeable server] (.close server)))
+
+(defn reboot-aleph-server! [handler]
+  (if-not aleph-run!
+    (println "Aleph isn't in the classpath.")
+    (swap! !aleph-server
+           (fn [server]
+               (when server
+                 (aleph-stop! server))
+               (aleph-run! handler {:port 8083})))))

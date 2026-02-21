@@ -20,7 +20,7 @@
   ;; ---------------------------------------------------------------------------
   dev
   {:doc "Starts a dev repl. Additional deps aliases can be passed as arguments."
-   :task (t/dev :http-kit :ring-jetty :malli-schemas)}
+   :task (t/dev :aleph :http-kit :ring-jetty :malli-schemas)}
 
   dev:rj9a
   {:doc "Same as `dev` with ring-jetty replaced with rj9a."
@@ -39,26 +39,30 @@
   ;; ---------------------------------------------------------------------------
   test:all
   {:doc "Run all tests once."
-   :task (t/lazytest [:http-kit
+   :task (t/lazytest [:aleph
+                      :http-kit
                       :ring-jetty
                       :malli-schemas
                       :sdk-brotli]
                      [:test.paths/core-sdk
                       :test.paths/malli-schemas
                       :test.paths/brotli
+                      :test.paths/adapter-aleph
                       :test.paths/adapter-ring
                       :test.paths/adapter-http-kit
                       :test.paths/adapter-ring-jetty])}
 
   test:all-w
   {:doc "Watch all tests."
-   :task (t/lazytest [:http-kit
+   :task (t/lazytest [:aleph
+                      :http-kit
                       :ring-jetty
                       :malli-schemas
                       :sdk-brotli]
                      [:test.paths/core-sdk
                       :test.paths/malli-schemas
                       :test.paths/brotli
+                      :test.paths/adapter-aleph
                       :test.paths/adapter-ring
                       :test.paths/adapter-ring-jetty
                       :test.paths/adapter-http-kit]

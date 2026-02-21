@@ -6,8 +6,6 @@ Install using clojars deps coordinates:
 
 [![Clojars Project](https://img.shields.io/clojars/v/dev.data-star.clojure/http-kit-malli-schemas.svg)](https://clojars.org/dev.data-star.clojure/http-kit-malli-schemas)
 
-[![cljdoc badge](https://cljdoc.org/badge/dev.data-star.clojure/malli-schemas)](https://cljdoc.org/d/dev.data-star.clojure/malli-schemas/CURRENT)
-
 ## Overview
 
 This library provides Malli schemas for Http-kit adapter APIs.

@@ -116,6 +116,8 @@ differences are unavoidable.
 These differences revolve mainly around disconnect detection and how the ring
 synchronous and asynchronous APIs behave.
 
+The patch functions from the main API may also have different return values.
+
 Refer to the SDK adapter READMEs for more information.
 
 ### Option keys & default write profiles aliases

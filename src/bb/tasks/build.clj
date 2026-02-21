@@ -11,20 +11,25 @@
 ;; -----------------------------------------------------------------------------
 (def sdk-dir                                "libraries/sdk")
 (def sdk-brotli-dir                         "libraries/sdk-brotli")
+(def sdk-adapter-aleph-dir                  "libraries/sdk-aleph")
+(def sdk-adapter-aleph-malli-schemas-dir    "libraries/sdk-aleph-malli-schemas")
 (def sdk-adapter-http-kit-dir               "libraries/sdk-http-kit")
 (def sdk-adapter-http-kit-malli-schemas-dir "libraries/sdk-http-kit-malli-schemas")
 (def sdk-adapter-ring-dir                   "libraries/sdk-ring")
 (def sdk-adapter-ring-malli-schemas-dir     "libraries/sdk-ring-malli-schemas")
 (def sdk-malli-schemas-dir                  "libraries/sdk-malli-schemas")
 
-;; Carrefull order matters because of interdepencies
+;; Careful order matters because of inter-dependencies
 (def sdk-lib-dirs
   [sdk-dir
    sdk-brotli-dir
+
+   sdk-adapter-aleph-dir
    sdk-adapter-http-kit-dir
    sdk-adapter-ring-dir
 
    sdk-malli-schemas-dir
+   sdk-adapter-aleph-malli-schemas-dir
    sdk-adapter-http-kit-malli-schemas-dir
    sdk-adapter-ring-malli-schemas-dir])
 
@@ -32,15 +37,26 @@
 (def sdk-lib-maven-names
   '#{dev.data-star.clojure/sdk
      dev.data-star.clojure/brotli
+     dev.data-star.clojure/aleph
+     dev.data-star.clojure/aleph-malli-schemas
      dev.data-star.clojure/http-kit
      dev.data-star.clojure/http-kit-malli-schemas
      dev.data-star.clojure/malli-schemas
      dev.data-star.clojure/ring
      dev.data-star.clojure/ring-malli-schemas})
 
+
 (def lib-dir->deps
   {sdk-brotli-dir
    ['dev.data-star.clojure/sdk]
+
+   sdk-adapter-aleph-dir
+   ['dev.data-star.clojure/sdk]
+
+   sdk-adapter-aleph-malli-schemas-dir
+   ['dev.data-star.clojure/sdk
+    'dev.data-star.clojure/malli-schemas
+    'dev.data-star.clojure/aleph]
 
    sdk-adapter-http-kit-dir
    ['dev.data-star.clojure/sdk]
