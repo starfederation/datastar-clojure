@@ -2,9 +2,9 @@
  :deps {dev.data-star.clojure/sdk           {:mvn/version "1.0.0-RC8"}
         dev.data-star.clojure/aleph         {:mvn/version "1.0.0-RC8"}
         dev.data-star.clojure/malli-schemas {:mvn/version "1.0.0-RC8"}
-        metosin/malli                       {:mvn/version "0.17.0"}}
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.9"
-                                                         :git/sha "e405aac"}
+        metosin/malli                       {:mvn/version "0.20.0"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.12"
+                                                         :git/sha "97c5562"}
                           slipset/deps-deploy {:mvn/version "0.2.2"}}
                    :ns-default build}
            :neil  {:project {:name    dev.data-star.clojure/aleph-malli-schemas

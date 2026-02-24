@@ -6,9 +6,9 @@
          "./src/test/core-sdk"
          "./src/test/malli-schemas"]
 
- :deps {borkdude/rewrite-edn           {:mvn/version "0.4.9"}
-        io.github.noahtheduke/lazytest {:mvn/version "1.8.0"}
-        metosin/malli                  {:mvn/version "0.19.1"}}
+ :deps {borkdude/rewrite-edn           {:mvn/version "0.5.9"}
+        io.github.noahtheduke/lazytest {:mvn/version "1.9.1"}
+        metosin/malli                  {:mvn/version "0.20.0"}}
 
  :tasks
  {:requires ([tasks        :as t]
