@@ -12,8 +12,6 @@ This library contains some utilities to work with Brotli.
 Credits to [Anders](https://andersmurphy.com/) and his work on [Hyperlith](https://github.com/andersmurphy/hyperlith)
 from which this library takes it's code.
 
-> [!IMPORTANT]
-> At this moment only Http-kit is supported.
 
 ## Overview
 

@@ -12,16 +12,20 @@
 (def default-write-profile ac/basic-profile)
 
 
-(defn ->send [os opts]
+(defn ->send [raw-os opts]
   (let [{wrap ac/wrap-output-stream
-         write! ac/write!} (ac/write-profile opts default-write-profile)
-        writer (wrap os)]
+         write! ac/write!
+         custom-flush ac/custom-flush} (ac/write-profile opts default-write-profile)
+        wrapped-os (wrap raw-os)
+        flush (if custom-flush
+                custom-flush
+                ac/simple-flush)]
     (fn
       ([]
-       (.close ^Closeable writer))
+       (.close ^Closeable wrapped-os))
      ([event-type data-lines event-opts]
-      (write! writer event-type data-lines event-opts)
-      (ac/flush writer)))))
+      (write! wrapped-os event-type data-lines event-opts)
+      (flush wrapped-os raw-os)))))
 
 
 ;; Note that the send! field has 2 usages:
