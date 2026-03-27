@@ -51,6 +51,7 @@
 
   (Bring your own json parsing)"
   [request]
-  (if (= :get (:request-method request))
+  (if (or (= :get (:request-method request))
+          (= :delete (:request-method request)))
     (get-in request [:query-params consts/datastar-key])
     (:body request)))
