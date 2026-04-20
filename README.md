@@ -35,7 +35,7 @@ If you want to roll your own adapter implementation, see
 - Other libraries are optional
 - The ring library works with ring compliant adapters (adapter using the
   `ring.core.protocols/StreamableResponseBody`)
-- Currently the Brotli library works only with http-kit
+
 
 ## Usage
 
