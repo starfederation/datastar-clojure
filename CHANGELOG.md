@@ -1,5 +1,16 @@
 # Release notes for the Clojure SDK
 
+## 2026-04-20 - RC9
+### Changed
+- The CDN urls now point to the latest 1.0.1 release of Datastar.
+- Following a change in Datastar, the `get-signals` function now handles `DELETE`
+  http request the same way it handles `GET` requests. 
+- Updated library dependencies.
+
+### Fixed
+- The main README has been corrected, it now longer says that brotli only works
+  with http-kit
+
 ## 2026-02-13 - RC8
 ### Fixed
 - Some docs and examples were still using Datastar's old syntax. This is now

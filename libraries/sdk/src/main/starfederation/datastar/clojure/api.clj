@@ -57,11 +57,12 @@ Some scripts are provided:
   "URL for the Datastar js bundle tracking the latest Datastar, currently
   v1.0.0-RC7."
 
-  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js")
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js")
+
 
 (def CDN-map-url
   "URL for the Datastar source map going with [[CDN-url]]."
-  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.7/bundles/datastar.js.map")
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.1/bundles/datastar.js.map")
 
 ;; -----------------------------------------------------------------------------
 ;; SSE generator management

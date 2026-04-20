@@ -53,6 +53,9 @@ the last to finish before handing the response to the adapter.
 Http-kit detects closed connections by itself. When it does the `on-close`
 callback of `->sse-response` will be called.
 
+In a specific case the callback may not be called, see [this link](https://github.com/http-kit/http-kit/blob/22c615f03f8c3e7c4d5d0313745b4a6e5f285300/src/java/org/httpkit/server/RingHandler.java#L361-L406)
+
+
 ### SSE connection lifetime
 
 The connection stays alive until the client or your code explicitly closes it

@@ -39,10 +39,7 @@
 
 
 
-(def cdn-url
-  (str "https://cdn.jsdelivr.net/gh/starfederation/datastar@"
-       consts/version
-       "/bundles/datastar.js"))
+(def cdn-url d*/CDN-url)
 
 
 

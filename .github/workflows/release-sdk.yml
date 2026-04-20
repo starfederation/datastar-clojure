@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # tag: v4.22
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 # tag: v4.22
 
       - name: Setup java 21 as default java
         run: |
@@ -37,13 +37,13 @@ jobs:
         shell: bash
 
       - name: Install clojure + tools
-        uses: DeLaGuardo/setup-clojure@ada62bb3282a01a296659d48378b812b8e097360 # tag 13.2
+        uses: DeLaGuardo/setup-clojure@02f5a82b79a547523e664fe8a7a32ea14884d7b2 # tag 13.2
         with:
           cli: latest
           bb: latest
 
       - name: Cache clojure dependencies
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # tag: v4.2.3
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # tag: v4.2.3
         with:
           path: |
             ~/.m2/repository
@@ -61,49 +61,49 @@ jobs:
       - name: Build jar artifacts
         run: bb install:all
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
         with:
           name: sdk.jar
           path: libraries/sdk/target/*.jar
           if-no-files-found: error
           compression-level: 0
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
         with:
           name: brotli.jar
           path: libraries/sdk-brotli/target/*.jar
           if-no-files-found: error
           compression-level: 0
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
         with:
           name: adapter-http-kit.jar
           path: libraries/sdk-http-kit/target/*.jar
           if-no-files-found: error
           compression-level: 0
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
         with:
           name: adapter-http-kit-malli-schemas.jar
           path: libraries/sdk-http-kit-malli-schemas/target/*.jar
           if-no-files-found: error
           compression-level: 0
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
         with:
           name: malli-schemas.jar
           path: libraries/sdk-malli-schemas/target/*.jar
           if-no-files-found: error
           compression-level: 0
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
         with:
           name: adapter-ring.jar
           path: libraries/sdk-ring/target/*.jar
           if-no-files-found: error
           compression-level: 0
 
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
         with:
           name: adapter-ring-malli-schemas.jar
           path: libraries/sdk-ring-malli-schemas/target/*.jar
