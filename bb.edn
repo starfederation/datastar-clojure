@@ -7,8 +7,8 @@
          "./src/test/malli-schemas"]
 
  :deps {borkdude/rewrite-edn           {:mvn/version "0.5.9"}
-        io.github.noahtheduke/lazytest {:mvn/version "1.9.1"}
-        metosin/malli                  {:mvn/version "0.20.0"}}
+        io.github.noahtheduke/lazytest {:mvn/version "2.0.0"}
+        metosin/malli                  {:mvn/version "0.20.1"}}
 
  :tasks
  {:requires ([tasks        :as t]

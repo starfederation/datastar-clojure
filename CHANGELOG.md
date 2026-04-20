@@ -5,6 +5,7 @@
 - The CDN urls now point to the latest 1.0.1 release of Datastar.
 - Following a change in Datastar, the `get-signals` function now handles `DELETE`
   http request the same way it handles `GET` requests. 
+- Updated library dependencies.
 
 ### Fixed
 - The main README has been corrected, it now longer says that brotli only works

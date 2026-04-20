@@ -1,10 +1,10 @@
 {:paths ["src/main"]
- :deps {com.aayushatharva.brotli4j/brotli4j            {:mvn/version "1.20.0"}
+ :deps {com.aayushatharva.brotli4j/brotli4j            {:mvn/version "1.22.0"}
         dev.data-star.clojure/sdk                      {:mvn/version "1.0.0-RC8"}
-        io.netty/netty-buffer                          {:mvn/version "4.2.10.Final"}}
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.12"
-                                                         :git/sha "97c5562"}
-                          slipset/deps-deploy {:mvn/version "0.2.2"}}
+        io.netty/netty-buffer                          {:mvn/version "4.2.12.Final"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.13"
+                                                         :git/sha "ae52edf"}
+                          slipset/deps-deploy {:mvn/version "0.2.3"}}
                    :ns-default build}
            :neil  {:project {:name    dev.data-star.clojure/brotli
                              :description "Brotli compression helpers for the Datastar SDK"
