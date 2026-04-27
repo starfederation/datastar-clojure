@@ -77,6 +77,20 @@ jobs:
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
         with:
+          name: adapter-aleph.jar
+          path: libraries/sdk-aleph/target/*.jar
+          if-no-files-found: error
+          compression-level: 0
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
+        with:
+          name: adapter-aleph-malli-schemas.jar
+          path: libraries/sdk-aleph-malli-schemas/target/*.jar
+          if-no-files-found: error
+          compression-level: 0
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag: v4.6.2
+        with:
           name: adapter-http-kit.jar
           path: libraries/sdk-http-kit/target/*.jar
           if-no-files-found: error
