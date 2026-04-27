@@ -34,7 +34,7 @@
   provided as argument of the different callbacks described below.
 
   In sync mode, the connection is closed automatically when the handler is
-  done running. You need to explicitly close it in rinc async.
+  done running. You need to explicitly close it in ring async.
 
   Opts:
   - `:status`: status for the HTTP response, defaults to 200

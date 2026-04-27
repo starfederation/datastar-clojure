@@ -29,7 +29,7 @@
   Specific SSE headers are set automatically, the user provided ones will be
   merged.
 
-  Note that the SSE connection stays opened util you close it.
+  Note that the SSE connection stays opened until you close it.
 
   General options:
   - `:status`: status for the HTTP response, defaults to 200.

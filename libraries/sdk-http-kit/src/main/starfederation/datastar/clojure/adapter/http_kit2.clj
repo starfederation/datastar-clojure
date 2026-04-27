@@ -23,7 +23,7 @@
 (defn- as-channel
   "
   Replacement for [[hk-server/as-channel]] that doesn't deal with websockets
-  and doen't call `on-open` itself.
+  and doesn't call `on-open` itself.
 
   `on-open` is meant to be called by either a middleware or an interceptor on the return.
   "
@@ -44,7 +44,7 @@
   You need to use either [[start-responding-middleware]] or
   [[start-responding-interceptor]].
 
-  Note that the SSE connection stays opened util you close it.
+  Note that the SSE connection stays opened until you close it.
 
   Specific SSE headers are set automatically, the user provided ones will be
   merged.

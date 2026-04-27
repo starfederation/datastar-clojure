@@ -55,7 +55,7 @@ Some scripts are provided:
 ;; -----------------------------------------------------------------------------
 (def CDN-url
   "URL for the Datastar js bundle tracking the latest Datastar, currently
-  v1.0.0-RC7."
+  v1.0.1."
 
   "https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js")
 
@@ -69,7 +69,7 @@ Some scripts are provided:
 ;; -----------------------------------------------------------------------------
 (defmacro lock-sse!
   "Hold onto the lock of a `sse-gen` while executing `body`. This allows for
-  preventing concurent sending of sse events. Sse generators use
+  preventing concurrent sending of sse events. Sse generators use
   [[java.util.concurrent.locks.ReentrantLock]] under the hood.
 
   Ex:
@@ -102,9 +102,9 @@ Some scripts are provided:
 
 
 (defmacro with-open-sse
-  "Macro functioning similarly to [[clojure.core/with-open]]. It evalutes the
+  "Macro functioning similarly to [[clojure.core/with-open]]. It evaluates the
   `body` inside a try expression and closes the `sse-gen` at the end using
-  [[close-see!]] in a finally clause.
+  [[close-sse!]] in a finally clause.
 
   Ex:
   ```
@@ -199,7 +199,7 @@ Some scripts are provided:
 
   Whether to patch the signal only if it does not already
   exist. If not provided, the Datastar client side will default to false, which
-  will cause the data to be patchd into the signals."
+  will cause the data to be patched into the signals."
   common/only-if-missing)
 
 ;; Script opts
@@ -266,7 +266,7 @@ Some scripts are provided:
   consts/element-namespace-mathml)
 
 (defn patch-elements!
-  "Send HTML elements to the browser to be patchd into the DOM.
+  "Send HTML elements to the browser to be patched into the DOM.
 
   Args:
   - `sse-gen`: the sse generator to send from
@@ -361,7 +361,7 @@ Some scripts are provided:
   This function returns either a string or an InputStream depending on the
   HTTP method of the request.
 
-  - In the case of a GET request a string is returned (the signals are found in
+  - For GET and DELETE requests a string is returned (the signals are found in
     the `:query-params` map of the request)
   - For all other HTTP methods an `InputStream` is returned (the signals are the
     `:body` of the request)

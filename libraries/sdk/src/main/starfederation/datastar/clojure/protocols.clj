@@ -5,7 +5,7 @@
   (send-event! [this event-type data-lines opts] "Send sse event.")
   (get-lock [this] "Access to the lock used in the generator.")
   (close-sse! [this] "Close connection.")
-  (sse-gen? [this] "Test wheter a value is a SSEGenerator."))
+  (sse-gen? [this] "Test whether a value is a SSEGenerator."))
 
 
 (defn throw-not-implemented [type method]

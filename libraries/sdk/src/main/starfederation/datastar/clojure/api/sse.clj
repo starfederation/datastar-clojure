@@ -36,7 +36,7 @@
   - `:headers`: custom headers for the response
  
   The SSE headers this function provides can be overriden by the optional ones.
-  Be carreful with the following headers:
+  Be careful with the following headers:
 
   - \"Cache-Control\"
   - \"Content-Type\"

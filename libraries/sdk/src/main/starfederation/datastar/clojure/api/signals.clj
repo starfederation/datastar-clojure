@@ -45,9 +45,14 @@
 ;; Read signals
 ;; -----------------------------------------------------------------------------
 (defn get-signals
-  "Returns the signals json string. You need to use some middleware
-  that adds the :query-params key to the request for this function
-  to work properly.
+  "Extract datastar signals from a ring request map.
+
+  - For GET and DELETE requests, returns the signals json string from
+    `[:query-params consts/datastar-key]`. You need to use some middleware
+    that adds the `:query-params` key to the request for this function to
+    work properly.
+  - For all other HTTP methods, returns the request `:body` as an
+    `InputStream`.
 
   (Bring your own json parsing)"
   [request]
