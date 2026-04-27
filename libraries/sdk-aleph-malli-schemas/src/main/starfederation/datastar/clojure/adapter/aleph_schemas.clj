@@ -1,4 +1,4 @@
-(ns stardederation.datastar.clojure.adapter.aleph-schemas
+(ns starfederation.datastar.clojure.adapter.aleph-schemas
   (:require
     [malli.core :as m]
     [malli.util :as mu]
