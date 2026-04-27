@@ -469,6 +469,13 @@ Some scripts are provided:
   "Log msg in the browser console.
 
   Same behavior as [[execute-script!]].
+
+  > [!WARNING]
+  > `msg` is interpolated verbatim into a JavaScript double-quoted string
+  > literal. The caller is responsible for ensuring `msg` is safe to embed
+  > there (no unescaped `\"`, `\\`, `</script>`, newlines, or other
+  > characters that would break out of the literal). Never pass
+  > unsanitized user input directly.
   "
   ([sse-gen msg]
    (console-log! sse-gen msg {}))
@@ -480,6 +487,13 @@ Some scripts are provided:
   "Log error msg in the browser console.
 
   Same behavior as [[execute-script!]].
+
+  > [!WARNING]
+  > `msg` is interpolated verbatim into a JavaScript double-quoted string
+  > literal. The caller is responsible for ensuring `msg` is safe to embed
+  > there (no unescaped `\"`, `\\`, `</script>`, newlines, or other
+  > characters that would break out of the literal). Never pass
+  > unsanitized user input directly.
   "
   ([sse-gen msg]
    (console-error! sse-gen msg {}))
@@ -491,6 +505,13 @@ Some scripts are provided:
   "Redirect a page using a script.
 
   Same behavior as [[execute-script!]].
+
+  > [!WARNING]
+  > `url` is interpolated verbatim into a JavaScript double-quoted string
+  > literal. The caller is responsible for ensuring `url` is safe to embed
+  > there (no unescaped `\"`, `\\`, `</script>`, newlines, or other
+  > characters that would break out of the literal). Never pass
+  > unsanitized user input directly.
   "
   ([sse-gen url]
    (redirect! sse-gen url {}))
