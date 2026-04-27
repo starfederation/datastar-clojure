@@ -49,6 +49,13 @@
   (m/validate patch-modes-schema "toto"))
 
 
+(def element-namespaces-schema
+  [:enum
+   consts/element-namespace-html
+   consts/element-namespace-svg
+   consts/element-namespace-mathml])
+
+
 (def patch-element-options-schemas
   (mu/merge
     sse-options-schema
@@ -56,7 +63,8 @@
       [:map
        [common/selector :string]
        [common/patch-mode patch-modes-schema]
-       [common/use-view-transition :boolean]])))
+       [common/use-view-transition :boolean]
+       [common/element-namespace element-namespaces-schema]])))
 
 ;; -----------------------------------------------------------------------------
 (def selector-schema :string)
