@@ -72,7 +72,7 @@
    sdk-adapter-ring-malli-schemas-dir
    ['dev.data-star.clojure/sdk
     'dev.data-star.clojure/malli-schemas
-    'dev.data-star.clojure/http-kit]
+    'dev.data-star.clojure/ring]
 
    sdk-malli-schemas-dir
    ['dev.data-star.clojure/sdk]})
