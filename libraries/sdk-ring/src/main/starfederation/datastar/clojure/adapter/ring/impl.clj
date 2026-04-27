@@ -77,14 +77,13 @@
     (u/lock! lock
       ;; If either send! or on-close are here we try to close them
       (if (or send! on-close)
-        (let [res (ac/close-sse! #(when send! (send!))
-                                 #(when on-close (on-close this)))]
-          ;; We make sure to clean them up after closing
-          (set! send! nil)
-          (set! on-close nil)
-          (if (instance? Exception res)
-            (throw res)
-            true))
+        (try
+          (ac/close-sse! #(when send! (send!))
+                         #(when on-close (on-close this)))
+          (finally
+            ;; Clean up regardless of whether closing threw
+            (set! send! nil)
+            (set! on-close nil)))
         false)))
 
   (sse-gen? [_] true)

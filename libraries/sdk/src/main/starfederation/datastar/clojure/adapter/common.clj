@@ -338,10 +338,11 @@
 
   Both thunks are called using [[try-closing]] to capture exceptions.
 
-  This function rethrows the first `java.lang.Throwable` encountered. Otherwise
-  it returns either `true` when all thunks are exceptions free or an
-  exception created with [[ex-info]] that contains the thunks exceptions in it's
-  data under the key [[closing-exceptions]]."
+  Returns `true` when both thunks complete without exceptions. If a thunk
+  threw a `java.lang.Throwable` that wasn't caught, that throwable
+  propagates. Otherwise, if one or more thunks threw an exception, this
+  function throws an [[ex-info]] whose data contains the thunks'
+  exceptions under the key [[closing-exceptions]]."
   [close-io! on-close!]
   (let [results [(try-closing close-io! "Error closing the output stream.")
                  (try-closing on-close! "Error calling the on close callback.")]
@@ -350,8 +351,8 @@
         throwable (some identity throwables)]
     (cond
       throwable        (throw throwable)
-      (seq exceptions) (ex-info "Error closing the sse-gen."
-                                {closing-exceptions exceptions})
+      (seq exceptions) (throw (ex-info "Error closing the sse-gen."
+                                       {closing-exceptions exceptions}))
       :else            true)))
 
 

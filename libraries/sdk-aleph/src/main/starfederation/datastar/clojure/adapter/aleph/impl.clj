@@ -86,17 +86,15 @@
   (close-sse! [this]
     (u/lock! lock
       (if on-close
-        (let [closing-res (ac/close-sse! #(do (send!))
-                                         #(when on-close (on-close this)))]
-
-          ;; on-close serves as a sentinel, that way when
-          ;; the user close the SSEGenerator is closed (as opposed to the browser)
-          ;; we don't close again when the manifold stream on-closed callback is called
-          (set! on-close nil)
-          (s/close! stream)
-          (if (instance? Exception closing-res)
-            (throw closing-res)
-            closing-res))
+        (try
+          (ac/close-sse! #(do (send!))
+                         #(when on-close (on-close this)))
+          (finally
+            ;; on-close serves as a sentinel, that way when
+            ;; the user closes the SSEGenerator (as opposed to the browser)
+            ;; we don't close again when the manifold stream on-closed callback is called
+            (set! on-close nil)
+            (s/close! stream)))
         false)))
 
   (sse-gen? [_] true)
