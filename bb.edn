@@ -29,7 +29,7 @@
   dev:empty
   {:doc "Dev repl with no adapters."
    :task (t/dev :malli-schemas)}
- 
+
   dev:bb
   {:doc "Start a babashka nrepl server. An addr like `localhost:1234` can be passed as argument."
    :task (t/dev-bb)}
@@ -93,34 +93,11 @@
   ;; ---------------------------------------------------------------------------
   ;; Build tasks
   ;; ---------------------------------------------------------------------------
-  jar:sdk
-  {:doc  "Build jar for the common sdk"
-   :task (build/lib-jar! build/sdk-dir)}
-
-  jar:sdk-adapter-ring
-  {:doc  "Build jar for the adapter-ring"
-   :task (build/lib-jar! build/sdk-adapter-ring-dir)}
-
-  jar:sdk-adapter-http-kit
-  {:doc  "Build jar for the adapter-http-kit"
-   :task (build/lib-jar! build/sdk-adapter-http-kit-dir)}
-
-  jar:sdk-brotli
-  {:doc  "Build jar for the Brotli library"
-   :task (build/lib-jar! build/sdk-brotli-dir)}
-
-  jar:sdk-malli-schemas
-  {:doc  "Build jar for the malli-schemas"
-   :task (build/lib-jar! build/sdk-malli-schemas-dir)}
-
   jar:all
   {:doc     "Build the jar for all the libs"
-   :depends [clean
-             jar:sdk
-             jar:sdk-adapter-ring
-             jar:sdk-adapter-http-kit
-             jar:sdk-brotli
-             jar:sdk-malli-schemas]}
+   :depends [clean]
+   :task (doseq [dir build/sdk-lib-dirs]
+           (build/lib-jar! dir))}
 
   install:clean
   {:doc "Deletes all datastar libs from the local maven repository."
@@ -172,4 +149,3 @@
   cljdoc:ingest
   {:doc "Tell local cljdoc server to ingest a library. Needs a argument (:sdk, :http-kit, :ring, ...)"
    :task (cljdoc/ingest! (first *command-line-args*))}}}
-
