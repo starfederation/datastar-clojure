@@ -46,38 +46,6 @@
      dev.data-star.clojure/ring-malli-schemas})
 
 
-(def lib-dir->deps
-  {sdk-brotli-dir
-   ['dev.data-star.clojure/sdk]
-
-   sdk-adapter-aleph-dir
-   ['dev.data-star.clojure/sdk]
-
-   sdk-adapter-aleph-malli-schemas-dir
-   ['dev.data-star.clojure/sdk
-    'dev.data-star.clojure/malli-schemas
-    'dev.data-star.clojure/aleph]
-
-   sdk-adapter-http-kit-dir
-   ['dev.data-star.clojure/sdk]
-
-   sdk-adapter-http-kit-malli-schemas-dir
-   ['dev.data-star.clojure/sdk
-    'dev.data-star.clojure/malli-schemas
-    'dev.data-star.clojure/http-kit]
-
-   sdk-adapter-ring-dir
-   ['dev.data-star.clojure/sdk]
-
-   sdk-adapter-ring-malli-schemas-dir
-   ['dev.data-star.clojure/sdk
-    'dev.data-star.clojure/malli-schemas
-    'dev.data-star.clojure/http-kit]
-
-   sdk-malli-schemas-dir
-   ['dev.data-star.clojure/sdk]})
-
-
 (def maven-dir
   (str (fs/path (fs/home) ".m2" "repository" "dev" "data-star" "clojure")))
 
@@ -94,15 +62,6 @@
 ;; -----------------------------------------------------------------------------
 ;; Tasks
 ;; -----------------------------------------------------------------------------
-(defn update-deps-version [deps-map lib-dir version]
-  (if-let [deps (lib-dir->deps lib-dir)]
-    (reduce (fn [deps-map dep]
-              (r/assoc-in deps-map [:deps dep] {:mvn/version version}))
-            deps-map
-            deps)
-    deps-map))
-
-
 (defn get-interdependencies [deps-map]
   (-> deps-map
       r/sexpr
@@ -126,7 +85,7 @@
 
 
 (defn assoc-deps!
-  "Adds libraries interdependencies in deps.edn files"
+  "Change the version of inter-dependent libraries deps.edn files."
   [lib-dir version]
   (let [deps-file (->deps-file lib-dir)]
     (-> deps-file
@@ -180,4 +139,3 @@
 
 (defn lib-publish! [dir]
   (t/clojure {:dir dir} "-T:build deploy"))
-
