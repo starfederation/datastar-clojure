@@ -354,3 +354,147 @@
 
 (comment
   (ltr/run-test-var #'test-execute-script!))
+
+
+;; -----------------------------------------------------------------------------
+;; Sanitizer helpers
+;; -----------------------------------------------------------------------------
+;; The atomic helpers backing the safe-by-default validation, exposed so
+;; callers can also validate at a different boundary.
+(defn- threw? [thunk]
+  (try (thunk) false (catch Exception _ true)))
+
+(defdescribe test-assert-sse-line-safe!
+  (describe d*/assert-sse-line-safe!
+    (specify "passes through clean values"
+      (expect (= "1" (d*/assert-sse-line-safe! "1" "id")))
+      (expect (= "#main" (d*/assert-sse-line-safe! "#main" "selector")))
+      (expect (= "" (d*/assert-sse-line-safe! "" "id"))))
+    (specify "coerces to string"
+      (expect (= "42" (d*/assert-sse-line-safe! 42 "id"))))
+    (specify "throws on \\n"
+      (expect (threw? #(d*/assert-sse-line-safe! "1\nevent: bad" "id"))))
+    (specify "throws on \\r"
+      (expect (threw? #(d*/assert-sse-line-safe! "1\rmalicious" "id"))))
+    (specify "throws on \\r\\n"
+      (expect (threw? #(d*/assert-sse-line-safe! "x\r\ny" "selector"))))))
+
+
+(defdescribe test-assert-script-body-safe!
+  (describe d*/assert-script-body-safe!
+    (specify "passes through clean script bodies"
+      (expect (= "alert(1)" (d*/assert-script-body-safe! "alert(1)")))
+      (expect (= "" (d*/assert-script-body-safe! ""))))
+    (specify "lenient on non-string (consistent with execute-script! type expectations)"
+      (expect (= :test (d*/assert-script-body-safe! :test))))
+    (specify "throws on </script (lowercase)"
+      (expect (threw? #(d*/assert-script-body-safe! "</script>"))))
+    (specify "throws on </SCRIPT (any case)"
+      (expect (threw? #(d*/assert-script-body-safe! "x; </ScRiPt foo"))))))
+
+
+(defdescribe test-escape-script-attribute-value
+  (describe d*/escape-script-attribute-value
+    (specify "passes through clean values"
+      (expect (= "module" (d*/escape-script-attribute-value "module")))
+      (expect (= "" (d*/escape-script-attribute-value ""))))
+    (specify "coerces to string"
+      (expect (= "1" (d*/escape-script-attribute-value 1))))
+    (specify "escapes the four HTML attribute-context characters"
+      (expect (= "a&quot;b" (d*/escape-script-attribute-value "a\"b")))
+      (expect (= "&amp;" (d*/escape-script-attribute-value "&")))
+      (expect (= "&lt;a&gt;" (d*/escape-script-attribute-value "<a>"))))
+    (specify "escapes & before quotes (no double-escape)"
+      (expect (= "&amp;quot;" (d*/escape-script-attribute-value "&quot;"))))))
+
+
+(defdescribe test-assert-script-attribute-name-safe!
+  (describe d*/assert-script-attribute-name-safe!
+    (specify "accepts valid names"
+      (expect (= "type" (d*/assert-script-attribute-name-safe! "type")))
+      (expect (= "data-x" (d*/assert-script-attribute-name-safe! :data-x)))
+      (expect (= "x:y" (d*/assert-script-attribute-name-safe! "x:y"))))
+    (specify "throws on names with whitespace or =\""
+      (expect (threw? #(d*/assert-script-attribute-name-safe! "x onclick=foo")))
+      (expect (threw? #(d*/assert-script-attribute-name-safe! "x\"y"))))
+    (specify "throws on empty"
+      (expect (threw? #(d*/assert-script-attribute-name-safe! ""))))))
+
+
+(comment
+  (ltr/run-test-var #'test-assert-sse-line-safe!)
+  (ltr/run-test-var #'test-assert-script-body-safe!)
+  (ltr/run-test-var #'test-escape-script-attribute-value)
+  (ltr/run-test-var #'test-assert-script-attribute-name-safe!))
+
+
+;; -----------------------------------------------------------------------------
+;; Safe-by-default behavior
+;; -----------------------------------------------------------------------------
+;; The five public patch/script functions validate their option-line and
+;; script inputs by default. The `unsafe-*` twins skip the validation.
+(defdescribe test-safe-by-default-rejects-injection
+  (describe "patch-elements! rejects newlines in option lines"
+    (specify "id"
+      (expect (threw? #(d*/patch-elements! (at/->sse-gen) "x" {d*/id "1\nevent: bad"}))))
+    (specify "selector"
+      (expect (threw? #(d*/patch-elements! (at/->sse-gen) "x" {d*/selector "x\nevent: bad"}))))
+    (specify "patch-mode"
+      (expect (threw? #(d*/patch-elements! (at/->sse-gen) "x" {d*/patch-mode "after\nevent: bad"}))))
+    (specify "element-ns"
+      (expect (threw? #(d*/patch-elements! (at/->sse-gen) "x" {d*/element-ns "svg\nevent: bad"})))))
+
+  (describe "patch-elements-seq! rejects newlines"
+    (specify "selector"
+      (expect (threw? #(d*/patch-elements-seq! (at/->sse-gen) ["x"] {d*/selector "x\ny"})))))
+
+  (describe "remove-element! rejects newlines"
+    (specify "selector positional arg"
+      (expect (threw? #(d*/remove-element! (at/->sse-gen) "#x\nevent: bad"))))
+    (specify "id"
+      (expect (threw? #(d*/remove-element! (at/->sse-gen) "#x" {d*/id "1\nbad"})))))
+
+  (describe "patch-signals! rejects newlines"
+    (specify "id"
+      (expect (threw? #(d*/patch-signals! (at/->sse-gen) "{}" {d*/id "1\nbad"})))))
+
+  (describe "execute-script! defends the script tag"
+    (specify "rejects </script in body (lowercase)"
+      (expect (threw? #(d*/execute-script! (at/->sse-gen) "</script>"))))
+    (specify "rejects </SCRIPT in body (any case)"
+      (expect (threw? #(d*/execute-script! (at/->sse-gen) "x; </ScRiPt foo"))))
+    (specify "escapes attribute values"
+      (expect (= (d*/execute-script! (at/->sse-gen) "x"
+                                     {d*/auto-remove false
+                                      d*/attributes {"data-x" "a\" data-evil=\"x"}})
+                 (script-event
+                   "<script data-x=\"a&quot; data-evil=&quot;x\">x</script>"))))
+    (specify "rejects malformed attribute names"
+      (expect (threw? #(d*/execute-script! (at/->sse-gen) "x"
+                                           {d*/attributes {"x onclick=foo" "1"}}))))))
+
+
+(defdescribe test-unsafe-variants-skip-validation
+  (describe "unsafe-* twins do not validate"
+    (specify "unsafe-patch-elements! lets the injected line through"
+      (let [out (d*/unsafe-patch-elements! (at/->sse-gen) "x" {d*/id "1\nevent: bad"})]
+        (expect (.contains ^String out "id: 1\nevent: bad"))))
+
+    (specify "unsafe-patch-signals! lets the injected line through"
+      (let [out (d*/unsafe-patch-signals! (at/->sse-gen) "{}" {d*/id "1\nbad"})]
+        (expect (.contains ^String out "id: 1\nbad"))))
+
+    (specify "unsafe-remove-element! lets the injected selector through"
+      (let [out (d*/unsafe-remove-element! (at/->sse-gen) "#x\nevent: bad")]
+        (expect (.contains ^String out "selector #x\nevent: bad"))))
+
+    (specify "unsafe-execute-script! does not escape attribute values"
+      (let [out (d*/unsafe-execute-script! (at/->sse-gen) "alert(1)"
+                                           {d*/auto-remove false
+                                            d*/attributes {"data-x" "a\" b"}})]
+        (expect (.contains ^String out "data-x=\"a\" b\""))))))
+
+
+(comment
+  (ltr/run-test-var #'test-safe-by-default-rejects-injection)
+  (ltr/run-test-var #'test-unsafe-variants-skip-validation))
