@@ -73,7 +73,12 @@
             (ct/append-then-flush writer "some text")
             (ct/append-then-flush writer "some other text"))
           (reset! !res (-> baos .toByteArray (read-bytes {:brotli true})))
-          (expect (= @!res "some textsome other text"))))))
+          (expect (= @!res "some textsome other text")))))
+
+  (describe "compress / decompress charset"
+    (specify "non-ASCII text roundtrips through UTF-8 regardless of platform default"
+      (let [s "héllo — café — Ω 🚀"]
+        (expect (= s (brotli/decompress (brotli/compress s))))))))
 
 
 

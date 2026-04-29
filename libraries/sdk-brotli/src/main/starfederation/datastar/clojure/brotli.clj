@@ -18,7 +18,8 @@
      Encoder$Mode
      BrotliOutputStream]
     [com.aayushatharva.brotli4j.decoder Decoder]
-    [java.io OutputStream]))
+    [java.io OutputStream]
+    java.nio.charset.StandardCharsets))
 
 
 ;; Code taken from https://github.com/andersmurphy/hyperlith
@@ -64,16 +65,16 @@
 
   [data & {:as opts}]
   (-> (if (string? data)
-        (String/.getBytes data)
+        (String/.getBytes data StandardCharsets/UTF_8)
         ^byte/1 data)
       (Encoder/compress (encoder-params opts))))
 
 
 (defn decompress
-  "Decompress Brotli compressed data, returns a string."
+  "Decompress Brotli compressed data, returns a string (decoded as UTF-8)."
   [data]
   (let [decompressed (Decoder/decompress data)]
-    (String/new (.getDecompressedData decompressed))))
+    (String/new (.getDecompressedData decompressed) StandardCharsets/UTF_8)))
 
 
 (comment
