@@ -302,71 +302,77 @@
 ;; -----------------------------------------------------------------------------
 ;; Exception handling / Closing sse helpers
 ;; -----------------------------------------------------------------------------
-(defn try-closing
-  "Run a thunk `f` that closes some resources. Catches exceptions and returns
-  them wrapped in a [[ex-info]] with the message `error-msg`."
-  [f error-msg]
-  (try
-    (f)
-    (catch Throwable t
-      (ex-info error-msg {} t))))
+(defn try-thunk
+  "Run a thunk `f` catching any [[Throwable]]. Returns either the result or
+  the caught[[Throwable]]."
+  [f]
+  (try (f) (catch Throwable t t)))
 
 
-(def closing-exceptions
-  "Exceptions caught while closing a sse generator using [[close-sse!]]
-  are grouped under this key in the ex-info's data that is returned."
-  :d*.sse/closing-exceptions)
+(defn- error? [x] (instance? Error x))
+(defn- exception? [x] (instance? Exception x))
+
+(def closing-io-exception
+  "Key used to get the exception thrown while closing io resources during
+   the closing of a sse-gen. See [[close-sse!]]."
+  :d*.sse/closing-io-exception)
 
 
-(defn- group-exceptions [closing-results]
-  (group-by (fn [v] (cond
-                      (instance? Exception v) :exceptions
-                      (instance? Throwable v) :throwables
-                      :else                   :irrelevant))
-            closing-results))
-
-(comment
-  (group-exceptions [(Error.) (ex-info "" {})])
-  (group-exceptions [:a (ex-info "" {})])
-  (group-exceptions [:a (Error.)]))
+(def closing-on-close-exception
+  "Key used to get the exception thrown while calling the on-close callback
+   during the closing of a sse-gen. See [[close-sse!]]."
+  :d*.sse/closing-on-close-exception)
 
 
 (defn close-sse!
   "Closing a sse-gen is a 2 steps process.
+
   1. close IO resources calling the `close-io!` thunk.
   2. call the sse-gen's `on-close` callback by calling the `on-close!` thunk.
 
-  Both thunks are called using [[try-closing]] to capture exceptions.
+  Both thunks are called using [[try-thunk]] to capture [[Throwable]] and are
+  guaranteed to run once.
 
-  This function rethrows the first `java.lang.Throwable` encountered. Otherwise
-  it returns either `true` when all thunks are exceptions free or an
-  exception created with [[ex-info]] that contains the thunks exceptions in it's
-  data under the key [[closing-exceptions]]."
+  Returns `true` when both thunks complete without throwing.
+
+  The first [[java.lang.Error]] returned by a thunk is re-thrown.
+
+  If the thunks have thrown exceptions (not errors), these are grouped inside
+  the data of an exception created with [[ex-info]] under the keys
+  [[closing-io-exception]] and [[closing-on-close-exception]].
+  That ex-info is then thrown.
+  "
   [close-io! on-close!]
-  (let [results [(try-closing close-io! "Error closing the output stream.")
-                 (try-closing on-close! "Error calling the on close callback.")]
+  (let [close-io-res (try-thunk close-io!)
+        on-close-res (try-thunk on-close!)]
 
-        {:keys [throwables exceptions]} (group-exceptions results)
-        throwable (some identity throwables)]
-    (cond
-      throwable        (throw throwable)
-      (seq exceptions) (ex-info "Error closing the sse-gen."
-                                {closing-exceptions exceptions})
-      :else            true)))
+    (when (error? close-io-res) (throw close-io-res))
+    (when (error? on-close-res) (throw on-close-res))
 
-
-(defn get-closing-exceptions
-  "Extract the exceptions in the `ex-data` of a ex-info thrown during the
-  closing of a sse generator."
-  [e]
-  (-> e ex-data closing-exceptions))
+    (let [exceptions (cond-> {}
+                       (exception? close-io-res) (assoc closing-io-exception close-io-res)
+                       (exception? on-close-res) (assoc closing-on-close-exception on-close-res))]
+      (if (empty? exceptions)
+        true
+        (ex-info "Error closing the sse-gen." exceptions)))))
 
 
 (comment
-  (-> (ex-info "msg" {closing-exceptions [:e1 :e2]})
-      get-closing-exceptions))
+  (try-thunk (fn [] (close-sse! #(do 1)                    #(do 2))))
+  (try-thunk (fn [] (close-sse! #(throw (Error. "e1"))     #(do 2))))
+  (try-thunk (fn [] (close-sse! #(do 1)                     #(throw (Error. "e2")))))
+  (try-thunk (fn [] (close-sse! #(throw (Error. "e1"))     #(throw (Error. "e2")))))
+  (try-thunk (fn [] (close-sse! #(throw (Error. "e1"))     #(throw (Exception. "e2")))))
+  (try-thunk (fn [] (close-sse! #(throw (Exception. "e1")) #(throw (Error. "e2")))))
+
+  (try-thunk (fn [] (close-sse! #(throw (Exception. "e1")) #(do 2))))
+  (try-thunk (fn [] (close-sse! (fn [] 1)                  #(throw (Exception. "e2")))))
+  (try-thunk (fn [] (close-sse! #(throw (Exception. "e1")) #(throw (Exception. "e2"))))))
 
 
+;; -----------------------------------------------------------------------------
+;; Callbacks
+;; -----------------------------------------------------------------------------
 (def on-open
   "SSE option key:
 

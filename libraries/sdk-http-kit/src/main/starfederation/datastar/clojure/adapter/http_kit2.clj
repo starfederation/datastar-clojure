@@ -87,14 +87,11 @@
 
          :on-close
          (fn [_ status]
-           (let [closing-res
-                 (ac/close-sse!
-                  #(when-let [send! (deref future-send! 0 nil)] (send!))
-                  #(when on-close-cb
-                     (on-close-cb (deref future-gen 0 nil) status)))]
-             (if (instance? Exception closing-res)
-               (throw closing-res)
-               closing-res)))})
+           (ac/close-sse!
+            #(when-let [send! (deref future-send! 0 nil)] (send!))
+            #(when on-close-cb
+               (on-close-cb (deref future-gen 0 nil) status))))})
+
       :status (or status 200)
       :headers (ac/headers ring-request opts)
       ::datastar-sse-response true)))
