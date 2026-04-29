@@ -284,6 +284,15 @@ Some scripts are provided:
   Return value:
   - `false` if the connection is closed
   - `true` otherwise
+
+  > [!WARNING]
+  > [[id]], [[selector]], [[patch-mode]] and [[element-ns]] are written
+  > verbatim onto a single line of the SSE wire format. A newline (`\\n`
+  > or `\\r`) in any of these values lets a caller inject arbitrary SSE
+  > lines (and forge whole events) into the stream. Treat these as
+  > developer-controlled; if any of them must come from user input, run
+  > the value through [[assert-sse-line-safe!]] (or your own validator)
+  > before passing it in.
   "
   ([sse-gen elements]
    (patch-elements! sse-gen elements {}))
@@ -292,7 +301,9 @@ Some scripts are provided:
 
 
 (defn patch-elements-seq!
-  "Same as [[patch-elements!]] except that it takes a seq of elements."
+  "Same as [[patch-elements!]] except that it takes a seq of elements.
+
+  See [[patch-elements!]]'s warning about option-line injection."
   ([sse-gen elements]
    (patch-elements-seq! sse-gen elements {}))
   ([sse-gen elements opts]
@@ -319,6 +330,11 @@ Some scripts are provided:
   Return value:
   - `false` if the connection is closed
   - `true` otherwise
+
+  > [!WARNING]
+  > `selector` and [[id]] are written verbatim onto a single line of the
+  > SSE wire format. See [[patch-elements!]]'s warning, and use
+  > [[assert-sse-line-safe!]] if either value can come from user input.
   "
   ([sse-gen selector]
    (remove-element! sse-gen selector {}))
@@ -348,6 +364,11 @@ Some scripts are provided:
   Return value:
   - `false` if the connection is closed
   - `true` otherwise
+
+  > [!WARNING]
+  > [[id]] is written verbatim onto a single line of the SSE wire format.
+  > A newline in it allows SSE event injection. If the value can come
+  > from user input, sanitize it with [[assert-sse-line-safe!]] first.
   "
   ([sse-gen signals-content]
    (patch-signals! sse-gen signals-content {}))
@@ -396,6 +417,18 @@ Some scripts are provided:
   Return value:
   - `false` if the connection is closed
   - `true` otherwise
+
+  > [!WARNING]
+  > `script-text` is interpolated as raw HTML inside the `<script>` tag,
+  > and each value in [[attributes]] is interpolated raw inside a
+  > double-quoted attribute. Both are treated as developer-controlled.
+  > If user input must reach either, sanitize it first:
+  > - call [[assert-script-body-safe!]] on `script-text` to reject
+  >   `</script>` (which would close the tag prematurely);
+  > - call [[escape-script-attribute-value]] on attribute values to
+  >   defuse `\"`, `&`, `<`, `>`;
+  > - call [[assert-script-attribute-name-safe!]] on attribute names you
+  >   don't fully control.
   "
   ([sse-gen script-text]
    (scripts/execute-script! sse-gen script-text {}))
@@ -519,6 +552,83 @@ Some scripts are provided:
    (execute-script! sse-gen
                     (str "setTimeout(() => window.location.href =\"" url "\")")
                     opts)))
+
+
+;; -----------------------------------------------------------------------------
+;; Sanitizers
+;; -----------------------------------------------------------------------------
+;; These are opt-in helpers. The patch / signal / script functions trust
+;; their inputs by design — values are expected to come from the developer,
+;; not from user input. When that assumption doesn't hold (e.g. a session
+;; id propagated into [[id]], a user-chosen CSS path in [[selector]],
+;; arbitrary data interpolated into a script tag), run the relevant value
+;; through the matching helper below first.
+(defn assert-sse-line-safe!
+  "Throw an [[clojure.core/ex-info]] if `(str v)` contains `\\n` or `\\r`,
+  otherwise return `(str v)`.
+
+  Use this on values that will reach an SSE option line — [[id]],
+  [[selector]], [[patch-mode]], [[element-ns]] and friends — when those
+  values can come from user input. A newline in any of those would let
+  the caller append arbitrary SSE lines to the stream and forge events.
+
+  `name` is the field name and is included in the thrown error for
+  context (e.g. `\"selector\"`).
+
+  Ex:
+  ```clojure
+  (patch-elements! sse-gen html
+    {d*/selector (d*/assert-sse-line-safe! user-selector \"selector\")})
+  ```"
+  [v name]
+  (u/assert-no-newline! v name))
+
+
+(defn assert-script-body-safe!
+  "Throw if `script-text` contains `</script` (case-insensitive); otherwise
+  return `script-text`.
+
+  HTML5 raw-text element parsing closes a `<script>` element as soon as it
+  sees `</script`, regardless of the trailing characters. Escaping the
+  occurrence would change the JS that runs, so the only safe option is to
+  reject it.
+
+  Use this on `script-text` you build from untrusted input before passing
+  to [[execute-script!]]."
+  [script-text]
+  (when (and (string? script-text)
+             (re-find #"(?i)</script" script-text))
+    (throw (ex-info "Script content must not contain '</script' (would close the tag)."
+                    {:script script-text})))
+  script-text)
+
+
+(defn escape-script-attribute-value
+  "Return `v` (coerced to a string) with the four HTML attribute-context
+  characters escaped: `&`, `\"`, `<`, `>`. Use it on values you put into
+  the [[attributes]] map of [[execute-script!]] when those values come
+  from untrusted input — without escaping, a value containing `\"` can
+  break out of the attribute and inject extra attributes."
+  [v]
+  (-> (str v)
+      (.replace "&" "&amp;")
+      (.replace "\"" "&quot;")
+      (.replace "<" "&lt;")
+      (.replace ">" "&gt;")))
+
+
+(def ^:private valid-attr-name-re #"[A-Za-z_][A-Za-z0-9_:.-]*")
+
+(defn assert-script-attribute-name-safe!
+  "Throw if `(name k)` doesn't match `[A-Za-z_][A-Za-z0-9_:.-]*`; otherwise
+  return `(name k)`. HTML attribute names from untrusted input should be
+  validated before being interpolated into a `<script>` tag opener."
+  [k]
+  (let [n (name k)]
+    (when-not (re-matches valid-attr-name-re n)
+      (throw (ex-info (str "Invalid script attribute name: " (pr-str n))
+                      {:attribute n})))
+    n))
 
 
 ;; -----------------------------------------------------------------------------

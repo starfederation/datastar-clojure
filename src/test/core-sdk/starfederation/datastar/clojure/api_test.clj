@@ -354,3 +354,76 @@
 
 (comment
   (ltr/run-test-var #'test-execute-script!))
+
+
+;; -----------------------------------------------------------------------------
+;; Sanitizer helpers
+;; -----------------------------------------------------------------------------
+;; The patch / signal / script functions trust their inputs by design. These
+;; opt-in helpers let callers defend a value at the boundary when it can
+;; carry user input.
+(defn- threw? [thunk]
+  (try (thunk) false (catch Exception _ true)))
+
+(defdescribe test-assert-sse-line-safe!
+  (describe d*/assert-sse-line-safe!
+    (specify "passes through clean values"
+      (expect (= "1" (d*/assert-sse-line-safe! "1" "id")))
+      (expect (= "#main" (d*/assert-sse-line-safe! "#main" "selector")))
+      (expect (= "" (d*/assert-sse-line-safe! "" "id"))))
+    (specify "coerces to string"
+      (expect (= "42" (d*/assert-sse-line-safe! 42 "id"))))
+    (specify "throws on \\n"
+      (expect (threw? #(d*/assert-sse-line-safe! "1\nevent: bad" "id"))))
+    (specify "throws on \\r"
+      (expect (threw? #(d*/assert-sse-line-safe! "1\rmalicious" "id"))))
+    (specify "throws on \\r\\n"
+      (expect (threw? #(d*/assert-sse-line-safe! "x\r\ny" "selector"))))))
+
+
+(defdescribe test-assert-script-body-safe!
+  (describe d*/assert-script-body-safe!
+    (specify "passes through clean script bodies"
+      (expect (= "alert(1)" (d*/assert-script-body-safe! "alert(1)")))
+      (expect (= "" (d*/assert-script-body-safe! ""))))
+    (specify "lenient on non-string (consistent with execute-script! type expectations)"
+      (expect (= :test (d*/assert-script-body-safe! :test))))
+    (specify "throws on </script (lowercase)"
+      (expect (threw? #(d*/assert-script-body-safe! "</script>"))))
+    (specify "throws on </SCRIPT (any case)"
+      (expect (threw? #(d*/assert-script-body-safe! "x; </ScRiPt foo"))))))
+
+
+(defdescribe test-escape-script-attribute-value
+  (describe d*/escape-script-attribute-value
+    (specify "passes through clean values"
+      (expect (= "module" (d*/escape-script-attribute-value "module")))
+      (expect (= "" (d*/escape-script-attribute-value ""))))
+    (specify "coerces to string"
+      (expect (= "1" (d*/escape-script-attribute-value 1))))
+    (specify "escapes the four HTML attribute-context characters"
+      (expect (= "a&quot;b" (d*/escape-script-attribute-value "a\"b")))
+      (expect (= "&amp;" (d*/escape-script-attribute-value "&")))
+      (expect (= "&lt;a&gt;" (d*/escape-script-attribute-value "<a>"))))
+    (specify "escapes & before quotes (no double-escape)"
+      (expect (= "&amp;quot;" (d*/escape-script-attribute-value "&quot;"))))))
+
+
+(defdescribe test-assert-script-attribute-name-safe!
+  (describe d*/assert-script-attribute-name-safe!
+    (specify "accepts valid names"
+      (expect (= "type" (d*/assert-script-attribute-name-safe! "type")))
+      (expect (= "data-x" (d*/assert-script-attribute-name-safe! :data-x)))
+      (expect (= "x:y" (d*/assert-script-attribute-name-safe! "x:y"))))
+    (specify "throws on names with whitespace or =\""
+      (expect (threw? #(d*/assert-script-attribute-name-safe! "x onclick=foo")))
+      (expect (threw? #(d*/assert-script-attribute-name-safe! "x\"y"))))
+    (specify "throws on empty"
+      (expect (threw? #(d*/assert-script-attribute-name-safe! ""))))))
+
+
+(comment
+  (ltr/run-test-var #'test-assert-sse-line-safe!)
+  (ltr/run-test-var #'test-assert-script-body-safe!)
+  (ltr/run-test-var #'test-escape-script-attribute-value)
+  (ltr/run-test-var #'test-assert-script-attribute-name-safe!))
