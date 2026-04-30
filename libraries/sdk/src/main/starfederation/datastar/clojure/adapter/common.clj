@@ -356,18 +356,6 @@
         (throw (ex-info "Error closing the sse-gen." exceptions))
         true))))
 
-(comment
-  (close-sse! #(do 1)                    #(do 2))
-  (close-sse! #(throw (Error. "e1"))     #(do 2))
-  (close-sse! #(do 1)                    #(throw (Error. "e2")))
-  (close-sse! #(throw (Error. "e1"))     #(throw (Error. "e2")))
-  (close-sse! #(throw (Error. "e1"))     #(throw (Exception. "e2")))
-  (close-sse! #(throw (Exception. "e1")) #(throw (Error. "e2")))
-
-  (close-sse! #(throw (Exception. "e1")) #(do 2))
-  (close-sse! (fn [] 1)                  #(throw (Exception. "e2")))
-  (close-sse! #(throw (Exception. "e1")) #(throw (Exception. "e2"))))
-
 
 ;; -----------------------------------------------------------------------------
 ;; Callbacks

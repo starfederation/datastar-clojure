@@ -1,5 +1,6 @@
 (ns starfederation.datastar.clojure.adapter.common-test
   (:require
+    [matcher-combinators.test :refer [thrown-match?]]
     [starfederation.datastar.clojure.api :as d*]
     [starfederation.datastar.clojure.adapter.common :as ac]
     [starfederation.datastar.clojure.adapter.test :as at]
@@ -74,7 +75,7 @@
 
 
 ;; -----------------------------------------------------------------------------
-;; Tests
+;; Write profiles tests
 ;; -----------------------------------------------------------------------------
 (defn simple-round-trip [write-profile]
   (let [!res (atom nil)
@@ -149,6 +150,42 @@
           (expect (= @!res "some textsome other text"))))))
 
 
+;; -----------------------------------------------------------------------------
+;; Closing tests
+;; -----------------------------------------------------------------------------
+(def io-error (Error. "io"))
+(def oc-error (Error. "on-close"))
+
+(def io-exception (Exception. "io"))
+(def oc-exception (Exception. "on-close"))
+
+(def dummy-thunk (constantly true))
+
+(defmacro throws-error? [expected expr]
+  `(= ~expected
+      (try ~expr :no-throw (catch Throwable t# t#))))
+
+(defmacro throws-exception? [expected-data expr]
+  `(= ~expected-data
+      (try ~expr :no-throw (catch Exception e# (ex-data e#)))))
+
+(defdescribe closing-behavior
+  (specify "No exception/error returns true"
+    (expect (true? (ac/close-sse! dummy-thunk dummy-thunk))))
+
+  (specify "First error wins"
+    (expect (throws-error? io-error (ac/close-sse! #(throw io-error)     dummy-thunk)))
+    (expect (throws-error? oc-error (ac/close-sse! dummy-thunk           #(throw oc-error))))
+    (expect (throws-error? io-error (ac/close-sse! #(throw io-error)     #(throw oc-exception))))
+    (expect (throws-error? oc-error (ac/close-sse! #(throw io-exception) #(throw oc-error))))
+    (expect (throws-error? io-error (ac/close-sse! #(throw io-error)     #(throw oc-error)))))
+
+  (specify "Exception are caught and grouped"
+    (expect (throws-exception? {ac/closing-io-exception io-exception}        (ac/close-sse! #(throw io-exception) dummy-thunk)))
+    (expect (throws-exception? {ac/closing-on-close-exception oc-exception}  (ac/close-sse! dummy-thunk           #(throw oc-exception))))
+    (expect (throws-exception?  {ac/closing-io-exception io-exception
+                                 ac/closing-on-close-exception oc-exception} (ac/close-sse! #(throw io-exception) #(throw oc-exception))))))
+
 (comment
   :dbg
   :rec
@@ -157,4 +194,3 @@
   (ltr/run-test-var #'reading-bytes)
   (ltr/run-test-var #'normal)
   (ltr/run-test-var #'gzip))
-
