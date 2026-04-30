@@ -1,5 +1,16 @@
 # Release notes for the Clojure SDK
 
+## 2026-05-01 - RC10
+### Changed
+- The code handling exceptions arising when closing a sse generator has been
+  redesigned. Errors are thrown as is, exceptions are wrapped in an ExceptionInfo
+  whose `ex-data` contains an exception thrown during the closing of IO resources
+  and/or an exception thrown during the on-close callback.
+  See the `closing-io-exception` and `closing-on-close-exception` vars in your
+  adapter namespace to get at a specific exception. See the docstring for
+  `starfederation.datastar.clojure.adapter.common/close-sse!` for more
+  information about the whole sse-gen closing process.
+
 ## 2026-04-20 - RC9
 ### Changed
 - The CDN urls now point to the latest 1.0.1 release of Datastar.
