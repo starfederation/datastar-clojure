@@ -10,6 +10,8 @@
 (def-clone on-exception ac/on-exception)
 (def-clone default-on-exception ac/default-on-exception)
 
+(def-clone closing-io-exception ac/closing-io-exception)
+(def-clone closing-on-close-exception ac/closing-on-close-exception)
 
 (def-clone write-profile ac/write-profile)
 
