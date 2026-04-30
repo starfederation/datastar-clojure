@@ -354,7 +354,7 @@
                        (exception? on-close-res) (assoc closing-on-close-exception on-close-res))]
       (if (empty? exceptions)
         true
-        (ex-info "Error closing the sse-gen." exceptions)))))
+        (throw (ex-info "Error closing the sse-gen." exceptions))))))
 
 
 (comment
