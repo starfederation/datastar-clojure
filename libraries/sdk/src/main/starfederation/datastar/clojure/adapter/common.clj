@@ -304,7 +304,7 @@
 ;; -----------------------------------------------------------------------------
 (defn try-thunk
   "Run a thunk `f` catching any [[Throwable]]. Returns either the result or
-  the caught[[Throwable]]."
+  the caught [[Throwable]]."
   [f]
   (try (f) (catch Throwable t t)))
 
@@ -314,13 +314,13 @@
 
 (def closing-io-exception
   "Key used to get the exception thrown while closing io resources during
-   the closing of a sse-gen. See [[close-sse!]]."
+  the closing of a sse-gen. See [[close-sse!]]."
   :d*.sse/closing-io-exception)
 
 
 (def closing-on-close-exception
   "Key used to get the exception thrown while calling the on-close callback
-   during the closing of a sse-gen. See [[close-sse!]]."
+  during the closing of a sse-gen. See [[close-sse!]]."
   :d*.sse/closing-on-close-exception)
 
 
