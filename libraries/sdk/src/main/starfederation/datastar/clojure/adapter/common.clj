@@ -352,15 +352,14 @@
     (let [exceptions (cond-> {}
                        (exception? close-io-res) (assoc closing-io-exception close-io-res)
                        (exception? on-close-res) (assoc closing-on-close-exception on-close-res))]
-      (if (empty? exceptions)
-        true
-        (throw (ex-info "Error closing the sse-gen." exceptions))))))
-
+      (if (seq exceptions)
+        (throw (ex-info "Error closing the sse-gen." exceptions))
+        true))))
 
 (comment
   (close-sse! #(do 1)                    #(do 2))
   (close-sse! #(throw (Error. "e1"))     #(do 2))
-  (close-sse! #(do 1)                     #(throw (Error. "e2")))
+  (close-sse! #(do 1)                    #(throw (Error. "e2")))
   (close-sse! #(throw (Error. "e1"))     #(throw (Error. "e2")))
   (close-sse! #(throw (Error. "e1"))     #(throw (Exception. "e2")))
   (close-sse! #(throw (Exception. "e1")) #(throw (Error. "e2")))
