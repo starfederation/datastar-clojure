@@ -3,10 +3,14 @@
 ## Directory structure
 
 - `libraries/sdk`: the source folder for the main SDK
-- `libraries/sdk-ring`: source folders for the ring adapter specific code
-- `libraries/sdk-http-kit`: source folders for the http-kit adapter specific code
-- `libraries/sdk-malli-schemas`: self explanatory...
+- `libraries/sdk-aleph`: source folders for the aleph adapter specific code
+- `libraries/sdk-aleph-malli-schemas`: source folders for the aleph adapter malli schemas
 - `libraries/sdk-brotli`: brotli write profiles
+- `libraries/sdk-http-kit`: source folders for the http-kit adapter specific code
+- `libraries/sdk-http-kit-malli-schemas`: source folders for the http-kit adapter malli schemas
+- `libraries/sdk-malli-schemas`: malli schemas for the SDK common code
+- `libraries/sdk-ring`: source folders for the ring adapter specific code
+- `libraries/sdk-ring-malli-schemas`: source folders for the ring adapter malli schemas
 - `src/bb`: tasks used run a repl, tests...
 - `src/bb-example`: bb examples
 - `src/dev`: dev utils, examples

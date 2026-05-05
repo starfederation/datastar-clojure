@@ -87,7 +87,7 @@
    :task (t/start-test-server)}
 
   test:sdk-common-go
-  {:doc "Run the server used for the SDKs' common tests."
+  {:doc "Run the go binary for the SDKs' common tests."
    :task (t/run-go-tests)}
 
   ;; ---------------------------------------------------------------------------
