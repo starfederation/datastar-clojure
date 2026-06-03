@@ -9,10 +9,11 @@
 (def retry-duration      :d*.sse/retry-duration)
 
 ;; Merge fragment opts
-(def selector            :d*.elements/selector)
-(def patch-mode          :d*.elements/patch-mode)
-(def use-view-transition :d*.elements/use-view-transition)
-(def element-namespace   :d*.elements/namespace)
+(def selector                 :d*.elements/selector)
+(def patch-mode               :d*.elements/patch-mode)
+(def use-view-transition      :d*.elements/use-view-transition)
+(def view-transition-selector :d*.elements/view-transition-selector)
+(def element-namespace        :d*.elements/namespace)
 
 ;;Signals opts
 (def only-if-missing     :d*.signals/only-if-missing)

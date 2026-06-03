@@ -16,6 +16,7 @@ These function take options map whose keys are:
 - [[selector]]
 - [[patch-mode]]
 - [[use-view-transition]]
+- [[view-transition-selector]]
 - [[element-ns]]
 - [[only-if-missing]]
 - [[auto-remove]]
@@ -55,14 +56,14 @@ Some scripts are provided:
 ;; -----------------------------------------------------------------------------
 (def CDN-url
   "URL for the Datastar js bundle tracking the latest Datastar, currently
-  v1.0.1."
+  v1.0.2."
 
-  "https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.1/bundles/datastar.js")
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.2/bundles/datastar.js")
 
 
 (def CDN-map-url
   "URL for the Datastar source map going with [[CDN-url]]."
-  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.1/bundles/datastar.js.map")
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.2/bundles/datastar.js.map")
 
 ;; -----------------------------------------------------------------------------
 ;; SSE generator management
@@ -182,6 +183,13 @@ Some scripts are provided:
   Datastar client side will default to false."
   common/use-view-transition)
 
+(def view-transition-selector
+  "[[patch-elements!]] / [[remove-element!]  option, string:
+
+  Selector used for the view transitions API. This option is
+  applied only if [[use-view-transition]] is true.
+  "
+  common/view-transition-selector)
 
 (def element-ns
   "[[patch-elements!]] & [[patch-elements-seq!]] option, boolean:
@@ -279,6 +287,7 @@ Some scripts are provided:
   - [[selector]]
   - [[patch-mode]]
   - [[use-view-transition]]
+  - [[view-transition-selector]]
   - [[element-ns]]
 
   Return value:
@@ -315,6 +324,7 @@ Some scripts are provided:
   - [[id]]
   - [[retry-duration]]
   - [[use-view-transition]]
+  - [[view-transition-selector]]
 
   Return value:
   - `false` if the connection is closed

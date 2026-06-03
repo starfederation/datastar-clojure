@@ -99,6 +99,9 @@
 (def use-view-transition-line
   (->data-line consts/use-view-transition-dataline-literal true))
 
+(def view-transition-selector-line
+  (->data-line consts/view-transition-selector-dataline-literal "#selector"))
+
 (def test-namespace consts/element-namespace-svg)
 (def namespace-line
   (->data-line consts/namespace-dataline-literal test-namespace))
@@ -148,6 +151,23 @@
   (expect (= (tested-patch-fn (at/->sse-gen) input {d*/use-view-transition true})
              (event patch-element-t (list* use-view-transition-line expected-datalines)))))
 
+(defn patch-vt-false-vtsel-test
+  "No view transition selector when view transition is false."
+  [tested-patch-fn input expected-datalines]
+  (expect (= (tested-patch-fn (at/->sse-gen) input {d*/use-view-transition false d*/view-transition-selector "#selector"})
+             (event patch-element-t expected-datalines))))
+
+(defn patch-vt-true-vtsel-empty-test
+  "View transition line is added on true, selector being empty isn't."
+  [tested-patch-fn input expected-datalines]
+  (expect (= (tested-patch-fn (at/->sse-gen) input {d*/use-view-transition true d*/view-transition-selector ""})
+             (event patch-element-t (list* use-view-transition-line expected-datalines)))))
+
+(defn patch-vt-true-vtsel-test
+  "View transition line is added and the selector is added."
+  [tested-patch-fn input expected-datalines]
+  (expect (= (tested-patch-fn (at/->sse-gen) input {d*/use-view-transition true d*/view-transition-selector "#selector"})
+             (event patch-element-t (list* use-view-transition-line view-transition-selector-line expected-datalines)))))
 
 (defn patch-ns-html-test
   "Patch-elements test case using the default namespace."
@@ -207,6 +227,15 @@
       (specify "view transition on true"
         (patch-vt-true-test d*/patch-elements! div-element div-data)))
 
+    (describe "handles view-transitions selector"
+      (specify "no view transition selector when no view transition."
+        (patch-vt-false-vtsel-test d*/patch-elements! div-element div-data))
+
+      (specify "no view transitions selector when selector empty"
+        (patch-vt-true-vtsel-empty-test d*/patch-elements! div-element div-data))
+
+      (specify "view transitions selector when view transitions true and selector"
+        (patch-vt-true-vtsel-test d*/patch-elements! div-element div-data)))
 
     (describe "handles namespaces"
       (specify "no ns on default value"
@@ -219,6 +248,8 @@
 
 
 (comment
+  (patch-vt-true-vtsel-test d*/patch-elements! div-element div-data)
+  (d*/patch-elements! (at/->sse-gen) div-element {d*/use-view-transition true d*/view-transition-selector "#selector"})
   (ltr/run-test-var #'test-patch-elements!))
 
 ;; -----------------------------------------------------------------------------
@@ -252,6 +283,16 @@
         (patch-vt-non-bool-test d*/patch-elements-seq! multi-elements multi-data))
       (specify "view transition on true"
         (patch-vt-true-test d*/patch-elements-seq! multi-elements multi-data)))
+
+    (describe "handles view-transitions selectors"
+      (specify "no view transition selector when no view transition."
+        (patch-vt-false-vtsel-test d*/patch-elements-seq! multi-elements multi-data))
+
+      (specify "no view transitions selector when selector empty"
+        (patch-vt-true-vtsel-empty-test d*/patch-elements-seq! multi-elements multi-data))
+
+      (specify "view transitions selector when view transitions true and selector"
+        (patch-vt-true-vtsel-test d*/patch-elements-seq! multi-elements multi-data)))
 
     (describe "handles namespaces"
       (specify "no ns on default value"

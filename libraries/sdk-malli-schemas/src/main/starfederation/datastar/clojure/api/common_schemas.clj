@@ -64,6 +64,7 @@
        [common/selector :string]
        [common/patch-mode patch-modes-schema]
        [common/use-view-transition :boolean]
+       [common/view-transition-selector :string]
        [common/element-namespace element-namespaces-schema]])))
 
 ;; -----------------------------------------------------------------------------
