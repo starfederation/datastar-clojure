@@ -16,13 +16,14 @@
 ;; -----------------------------------------------------------------------------
 ;; Dataline literals
 ;; -----------------------------------------------------------------------------
-(def selector-dataline-literal "selector ")
-(def mode-dataline-literal "mode ")
-(def elements-dataline-literal "elements ")
-(def use-view-transition-dataline-literal "useViewTransition ")
-(def signals-dataline-literal "signals ")
-(def only-if-missing-dataline-literal "onlyIfMissing ")
-(def namespace-dataline-literal "namespace ")
+(def selector-dataline-literal                 "selector ")
+(def mode-dataline-literal                     "mode ")
+(def elements-dataline-literal                 "elements ")
+(def use-view-transition-dataline-literal      "useViewTransition ")
+(def view-transition-selector-dataline-literal "viewTransitionSelector ")
+(def signals-dataline-literal                  "signals ")
+(def only-if-missing-dataline-literal          "onlyIfMissing ")
+(def namespace-dataline-literal                "namespace ")
 
 
 ;; -----------------------------------------------------------------------------

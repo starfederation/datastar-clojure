@@ -1,5 +1,14 @@
 # Release notes for the Clojure SDK
 
+## 2026-06-03 - RC11
+### Added
+- The new `view-transition-selector` option for patch elements functions that
+  was introduced in Datastar v1.0.2 is now supported.
+  
+### Changed
+- The Datastar CDN url provided in the api now points to Datastar v1.0.2
+
+
 ## 2026-05-01 - RC10
 ### Changed
 - The code handling exceptions arising when closing a sse generator has been

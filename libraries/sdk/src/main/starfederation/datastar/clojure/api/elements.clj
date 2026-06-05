@@ -18,6 +18,9 @@
 (defn- add-view-transition? [v]
   (common/add-boolean-option? consts/default-elements-use-view-transitions v))
 
+(defn- add-view-transition-selector? [use-view-transition selector]
+  (and use-view-transition (u/not-empty-string? selector)))
+
 (defn add-namespace? [namespace]
   (not= consts/default-element-namespace namespace))
 
@@ -28,7 +31,8 @@
   (let [sel (common/selector opts)
         patch-mode (common/patch-mode opts)
         use-vt (common/use-view-transition opts)
-        namespace (common/element-namespace opts)]
+        namespace (common/element-namespace opts)
+        vt-sel (common/view-transition-selector opts)]
 
     (cond-> data-lines!
       (and sel (valid-selector? sel))
@@ -39,6 +43,9 @@
 
       (and use-vt (add-view-transition? use-vt))
       (common/add-opt-line! consts/use-view-transition-dataline-literal use-vt)
+
+      (and vt-sel (add-view-transition-selector? use-vt vt-sel))
+      (common/add-opt-line! consts/view-transition-selector-dataline-literal vt-sel)
 
       (and namespace (add-namespace? namespace))
       (common/add-opt-line! consts/namespace-dataline-literal namespace))))
@@ -139,10 +146,12 @@
   (= (->patch-elements-seq ["<div>hello</div> \n<div>world!!!</div>" "<div>world!!!</div>"]
                        {common/selector "#toto"
                         common/patch-mode consts/element-patch-mode-after
-                        common/use-view-transition true})
+                        common/use-view-transition true
+                        common/view-transition-selector "#id"})
      ["selector #toto"
       "mode after"
       "useViewTransition true"
+      "viewTransitionSelector #id"
       "elements <div>hello</div> "
       "elements <div>world!!!</div>"
       "elements <div>world!!!</div>"]))
