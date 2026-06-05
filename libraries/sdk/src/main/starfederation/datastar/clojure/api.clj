@@ -273,6 +273,110 @@ Some scripts are provided:
   "element namespace: mathMl namespace"
   consts/element-namespace-mathml)
 
+;; -----------------------------------------------------------------------------
+;; Sanitizers
+;; -----------------------------------------------------------------------------
+;; The atomic helpers backing the safe-by-default validation. They are
+;; public so callers can also validate at a different boundary (e.g.
+;; before passing a value into one of the `unsafe-*` variants below).
+(defn assert-sse-line-safe!
+  "Throw an [[clojure.core/ex-info]] if `(str v)` contains `\\n` or `\\r`,
+  otherwise return `(str v)`.
+
+  Use this on values that will reach an SSE option line — [[id]],
+  [[selector]], [[patch-mode]], [[element-ns]] and friends — when those
+  values can come from user input. A newline in any of those would let
+  the caller append arbitrary SSE lines to the stream and forge events.
+
+  `name` is the field name and is included in the thrown error for
+  context (e.g. `\"selector\"`)."
+  [v name]
+  (u/assert-no-newline! v name))
+
+
+(defn assert-script-body-safe!
+  "Throw if `script-text` contains `</script` (case-insensitive); otherwise
+  return `script-text`.
+
+  HTML5 raw-text element parsing closes a `<script>` element as soon as
+  it sees `</script`, regardless of the trailing characters. Escaping
+  the occurrence would change the JS that runs, so the only safe option
+  is to reject it."
+  [script-text]
+  (when (and (string? script-text)
+             (re-find #"(?i)</script" script-text))
+    (throw (ex-info "Script content must not contain '</script' (would close the tag)."
+                    {:script script-text})))
+  script-text)
+
+
+(defn escape-script-attribute-value
+  "Return `v` (coerced to a string) with the four HTML attribute-context
+  characters escaped: `&`, `\"`, `<`, `>`. Use it on values you put into
+  the [[attributes]] map of [[execute-script!]] when those values come
+  from untrusted input — without escaping, a value containing `\"` can
+  break out of the attribute and inject extra attributes."
+  [v]
+  (-> (str v)
+      (.replace "&" "&amp;")
+      (.replace "\"" "&quot;")
+      (.replace "<" "&lt;")
+      (.replace ">" "&gt;")))
+
+
+(def ^:private valid-attr-name-re #"[A-Za-z_][A-Za-z0-9_:.-]*")
+
+(defn assert-script-attribute-name-safe!
+  "Throw if `(name k)` doesn't match `[A-Za-z_][A-Za-z0-9_:.-]*`; otherwise
+  return `(name k)`."
+  [k]
+  (let [n (name k)]
+    (when-not (re-matches valid-attr-name-re n)
+      (throw (ex-info (str "Invalid script attribute name: " (pr-str n))
+                      {:attribute n})))
+    n))
+
+
+;; -----------------------------------------------------------------------------
+;; Patch elements / signals / scripts
+;; -----------------------------------------------------------------------------
+;; Each user-facing function comes in two flavors:
+;; - the canonical name (e.g. `patch-elements!`) is **safe by default** —
+;;   values that get written raw onto the SSE wire or into a `<script>`
+;;   tag are validated/escaped before being sent, throwing on injection.
+;; - an `unsafe-*` twin skips that validation, for the case where the
+;;   developer has already validated the input or knows the value is
+;;   trusted.
+;; The atomic helpers backing the safe path ([[assert-sse-line-safe!]],
+;; [[assert-script-body-safe!]], [[escape-script-attribute-value]],
+;; [[assert-script-attribute-name-safe!]]) are public above so that
+;; callers can also validate at a different boundary.
+
+(defn- validate-element-line-opts! [opts]
+  (when-let [v (common/id opts)]                 (assert-sse-line-safe! v "id"))
+  (when-let [v (common/selector opts)]           (assert-sse-line-safe! v "selector"))
+  (when-let [v (common/patch-mode opts)]         (assert-sse-line-safe! v "patch-mode"))
+  (when-let [v (common/element-namespace opts)]  (assert-sse-line-safe! v "element-ns"))
+  opts)
+
+
+(defn unsafe-patch-elements!
+  "Like [[patch-elements!]] but skips the safe-by-default validation of
+  option-line values. Use only when you've already validated [[id]],
+  [[selector]], [[patch-mode]] and [[element-ns]] yourself, or know they
+  are trusted.
+
+  > [!WARNING]
+  > [[id]], [[selector]], [[patch-mode]] and [[element-ns]] are written
+  > verbatim onto a single line of the SSE wire format. A `\\n` or `\\r`
+  > in any of these lets the caller inject arbitrary SSE lines (and
+  > forge whole events) into the stream."
+  ([sse-gen elements]
+   (unsafe-patch-elements! sse-gen elements {}))
+  ([sse-gen elements opts]
+   (elements/patch-elements! sse-gen elements opts)))
+
+
 (defn patch-elements!
   "Send HTML elements to the browser to be patched into the DOM.
 
@@ -293,20 +397,44 @@ Some scripts are provided:
   Return value:
   - `false` if the connection is closed
   - `true` otherwise
-  "
+
+  Safe by default: throws if [[id]], [[selector]], [[patch-mode]] or
+  [[element-ns]] contains a `\\n` or `\\r`. Use
+  [[unsafe-patch-elements!]] to skip the check."
   ([sse-gen elements]
    (patch-elements! sse-gen elements {}))
   ([sse-gen elements opts]
+   (validate-element-line-opts! opts)
    (elements/patch-elements! sse-gen elements opts)))
 
 
-(defn patch-elements-seq!
-  "Same as [[patch-elements!]] except that it takes a seq of elements."
+(defn unsafe-patch-elements-seq!
+  "Like [[patch-elements-seq!]] but skips the safe-by-default validation.
+  See [[unsafe-patch-elements!]]'s warning."
   ([sse-gen elements]
-   (patch-elements-seq! sse-gen elements {}))
+   (unsafe-patch-elements-seq! sse-gen elements {}))
   ([sse-gen elements opts]
    (elements/patch-elements-seq! sse-gen elements opts)))
 
+
+(defn patch-elements-seq!
+  "Same as [[patch-elements!]] except that it takes a seq of elements.
+
+  Safe by default; see [[unsafe-patch-elements-seq!]] to skip validation."
+  ([sse-gen elements]
+   (patch-elements-seq! sse-gen elements {}))
+  ([sse-gen elements opts]
+   (validate-element-line-opts! opts)
+   (elements/patch-elements-seq! sse-gen elements opts)))
+
+
+(defn unsafe-remove-element!
+  "Like [[remove-element!]] but skips the safe-by-default validation.
+  See [[unsafe-patch-elements!]]'s warning."
+  ([sse-gen selector]
+   (unsafe-remove-element! sse-gen selector {}))
+  ([sse-gen selector opts]
+   (elements/remove-element! sse-gen selector opts)))
 
 
 (defn remove-element!
@@ -329,11 +457,24 @@ Some scripts are provided:
   Return value:
   - `false` if the connection is closed
   - `true` otherwise
-  "
+
+  Safe by default: throws if `selector` or [[id]] contains a `\\n` or
+  `\\r`. Use [[unsafe-remove-element!]] to skip the check."
   ([sse-gen selector]
    (remove-element! sse-gen selector {}))
   ([sse-gen selector opts]
+   (assert-sse-line-safe! selector "selector")
+   (when-let [v (common/id opts)] (assert-sse-line-safe! v "id"))
    (elements/remove-element! sse-gen selector opts)))
+
+
+(defn unsafe-patch-signals!
+  "Like [[patch-signals!]] but skips the safe-by-default validation of
+  [[id]]. See [[unsafe-patch-elements!]]'s warning."
+  ([sse-gen signals-content]
+   (unsafe-patch-signals! sse-gen signals-content {}))
+  ([sse-gen signals-content opts]
+   (signals/patch-signals! sse-gen signals-content opts)))
 
 
 (defn patch-signals!
@@ -358,10 +499,13 @@ Some scripts are provided:
   Return value:
   - `false` if the connection is closed
   - `true` otherwise
-  "
+
+  Safe by default: throws if [[id]] contains a `\\n` or `\\r`. Use
+  [[unsafe-patch-signals!]] to skip the check."
   ([sse-gen signals-content]
    (patch-signals! sse-gen signals-content {}))
   ([sse-gen signals-content opts]
+   (when-let [v (common/id opts)] (assert-sse-line-safe! v "id"))
    (signals/patch-signals! sse-gen signals-content opts)))
 
 
@@ -381,6 +525,34 @@ Some scripts are provided:
   "
   [ring-request]
   (signals/get-signals ring-request))
+
+
+(defn unsafe-execute-script!
+  "Like [[execute-script!]] but skips the safe-by-default validation /
+  escaping of `script-text` and [[attributes]].
+
+  > [!WARNING]
+  > `script-text` is interpolated as raw HTML inside the `<script>` tag,
+  > and each value in [[attributes]] is interpolated raw inside a
+  > double-quoted attribute. A `</script` substring in the body or a
+  > `\\\"` in an attribute value lets the caller close the tag and
+  > inject HTML/JS."
+  ([sse-gen script-text]
+   (unsafe-execute-script! sse-gen script-text {}))
+  ([sse-gen script-text opts]
+   (scripts/execute-script! sse-gen script-text opts)))
+
+
+(defn- sanitize-script-attributes [opts]
+  (if-let [attrs (common/attributes opts)]
+    (assoc opts common/attributes
+           (reduce-kv (fn [m k v]
+                        (assoc m
+                               (assert-script-attribute-name-safe! k)
+                               (escape-script-attribute-value v)))
+                      {}
+                      attrs))
+    opts))
 
 
 (defn execute-script!
@@ -406,11 +578,20 @@ Some scripts are provided:
   Return value:
   - `false` if the connection is closed
   - `true` otherwise
-  "
+
+  Safe by default:
+  - throws if `script-text` contains `</script` (any case);
+  - throws if [[id]] contains `\\n`/`\\r`;
+  - validates each attribute name in [[attributes]] and HTML-escapes
+    each value (`& \" < >`) before they reach the script tag.
+
+  Use [[unsafe-execute-script!]] if you need to skip the validation."
   ([sse-gen script-text]
-   (scripts/execute-script! sse-gen script-text {}))
+   (execute-script! sse-gen script-text {}))
   ([sse-gen script-text opts]
-   (scripts/execute-script! sse-gen script-text opts)))
+   (assert-script-body-safe! script-text)
+   (when-let [v (common/id opts)] (assert-sse-line-safe! v "id"))
+   (scripts/execute-script! sse-gen script-text (sanitize-script-attributes opts))))
 
 
 

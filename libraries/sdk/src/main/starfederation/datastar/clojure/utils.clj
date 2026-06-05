@@ -57,6 +57,21 @@
   (not (string/blank? s)))
 
 
+(defn assert-no-newline!
+  "Throw an [[ex-info]] if `(str v)` contains `\\n` or `\\r`.
+
+  Used to defend against SSE event injection: option/id values are written
+  to a single line of the SSE wire format, so a newline in user-controlled
+  input would let an attacker append arbitrary lines (and forge whole
+  events). `name` is included in the error for context. Returns `(str v)`."
+  [v ^String name]
+  (let [s (str v)]
+    (when (or (.contains s "\n") (.contains s "\r"))
+      (throw (ex-info (str name " must not contain newlines or carriage returns.")
+                      {:value v :name name})))
+    s))
+
+
 (defn merge-transient!
   "Merge a map `m` into a transient map `tm`.
   Returns the transient map without calling [[persistent!]] on it."
