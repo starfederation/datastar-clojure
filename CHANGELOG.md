@@ -1,5 +1,11 @@
 # Release notes for the Clojure SDK
 
+## 2026-10-19 - RC12
+### Fix
+- The SDK adapter for generic ring used to improperly get rid of its output
+  stream before closing it in the case of an exception being thrown while sending
+  a SSE event. See #39.
+
 ## 2026-06-03 - RC11
 ### Added
 - The new `view-transition-selector` option for patch elements functions that
