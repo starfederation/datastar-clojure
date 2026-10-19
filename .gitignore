@@ -14,3 +14,4 @@ test-resources/test.config.edn
 .cljdoc-preview
 .lazy.fnl
 .lazy.lua
+/mise.toml

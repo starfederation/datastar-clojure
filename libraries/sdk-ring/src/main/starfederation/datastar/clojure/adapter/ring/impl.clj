@@ -66,7 +66,6 @@
                                         :event-type event-type
                                         :data-lines data-lines
                                         :opts opts})
-              (set! send! nil)
               (p/close-sse! this))
             false)) ;; the event wasn't sent
         false))) ; closed return false
