@@ -1,5 +1,11 @@
 # Release notes for the Clojure SDK
 
+## 2026-10-25 - RC13
+### Fix
+- An exception thrown while sending HTTP headers in the ring adapter would could
+  mean opening output streams that aren't closed (think Brotli write profile).
+  We now send headers before doing anything else.
+
 ## 2026-10-19 - RC12
 ### Fix
 - The SDK adapter for generic ring used to improperly get rid of its output

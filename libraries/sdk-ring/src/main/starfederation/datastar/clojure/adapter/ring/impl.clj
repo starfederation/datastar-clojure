@@ -41,15 +41,19 @@
     (let [opts (::opts response)
           on-open (ac/on-open opts)]
 
+      ;; flush the HTTP headers as soon as possible
+      ;; if it throws no buffer are created that need closing, neither on-open
+      ;; nor on-close are called which is fine, there isn't anything opened in
+      ;; on-open so nothing to close on on-close
+      (.flush ^OutputStream output-stream)
+
+
       ;; Set the SSEGenerator's state
       (set! send! (->send output-stream opts))
       (set! on-exception (or (ac/on-exception opts)
                              ac/default-on-exception))
       (when-let [cb (ac/on-close opts)]
         (set! on-close cb))
-
-      ;; flush the HTTP headers as soon as possible
-      (.flush ^OutputStream output-stream)
 
       ;; SSE connection is ready we call user code
       (on-open this)))
