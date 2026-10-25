@@ -1,5 +1,14 @@
 # Release notes for the Clojure SDK
 
+## 2026-10-25 - RC13
+### Fix
+- Fixing issue #41: The SSE generator from the ring adapter detects a client
+  disconnecting when an IOException is thrown sending a patch. When it does,
+  it closes output streams created by the write profile used. Right now, closing
+  these will throw, the underlying OS (provided by the server) is already closed
+  after the first IOException. With this fix we discard the second IOException,
+  it is just a consequence of the first, the client just disconnected.
+
 ## 2026-10-19 - RC12
 ### Fix
 - The SDK adapter for generic ring used to improperly get rid of its output
