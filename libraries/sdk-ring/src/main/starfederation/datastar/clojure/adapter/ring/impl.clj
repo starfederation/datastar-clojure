@@ -66,7 +66,14 @@
                                         :event-type event-type
                                         :data-lines data-lines
                                         :opts opts})
-              (p/close-sse! this))
+              (try
+                ;; If the write profile uses compression, closing here will throw
+                ;; an exception when closing the compression OS which is expected.
+                (p/close-sse! this)
+                (catch Exception e
+                  ;; We only rethrow exceptions thrown by the on-close callback.
+                  (when (-> e ex-data ac/closing-on-close-exception)
+                    (throw e)))))
             false)) ;; the event wasn't sent
         false))) ; closed return false
 
