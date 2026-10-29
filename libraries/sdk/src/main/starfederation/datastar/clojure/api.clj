@@ -56,14 +56,25 @@ Some scripts are provided:
 ;; -----------------------------------------------------------------------------
 (def CDN-url
   "URL for the Datastar js bundle tracking the latest Datastar, currently
-  v1.0.2."
+  v1.0.4."
 
-  "https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.2/bundles/datastar.js")
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.4/bundles/datastar.js")
 
 
 (def CDN-map-url
   "URL for the Datastar source map going with [[CDN-url]]."
-  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.2/bundles/datastar.js.map")
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.4/bundles/datastar.js.map")
+
+(def CDN-url-rocket
+  "URL for the Datastar + rocket js bundle tracking the latest Datastar, currently
+  v1.0.4."
+
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.4/bundles/datastar-rocket.js")
+
+
+(def CDN-map-url-rocket
+  "URL for the Datastar + rocket source map going with [[CDN-url]]."
+  "https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.4/bundles/datastar-rocket.js.map")
 
 ;; -----------------------------------------------------------------------------
 ;; SSE generator management
@@ -464,9 +475,19 @@ Some scripts are provided:
    (sse "delete" url opts-string)))
 
 
+(defn sse-query
+  "Helper making a @query(...) action."
+  ([url]
+   (sse "query" url))
+  ([url opts-string]
+   (sse "query" url opts-string)))
+
 (comment
   (sse-get "/a/b")
   := "@get('/a/b')"
+
+  (sse-query "/a/b")
+  := "@query('/a/b')"
 
   (sse-put "/a/b" "{includeLocal: true}")
   := "@put('/a/b', {includeLocal: true})")
