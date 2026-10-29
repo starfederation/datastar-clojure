@@ -1,5 +1,14 @@
 # Release notes for the Clojure SDK
 
+## 2026-10-25 - RC12
+## Changed
+- The CDN link in the api now point to D* v1.0.4
+- updated the dependencies of the libraries
+
+## Added
+- Added links CDN links to the newest D* + Rocket bundle
+- `sse-query` function to make SSE QUERY action (added in D* v1.0.4)
+
 ## 2026-10-19 - RC12
 ### Fix
 - The SDK adapter for generic ring used to improperly get rid of its output
