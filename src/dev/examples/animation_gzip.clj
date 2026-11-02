@@ -71,6 +71,7 @@
 (comment
   #_{:clj-kondo/ignore true}
   (user/reload!)
+  (u/clear-terminal!)
   :help
   :dbg
   :rec
@@ -78,11 +79,15 @@
   *e
   state/!state
   state/!conns
+  (-> state/!conns deref count)
+  (state/step-state!)
+
   (reset! state/!conns #{})
 
   (-> state/!state
       deref
       rendering/page)
+  (state/resize! 5 5)
   (state/resize! 10 10)
   (state/resize! 20 20)
   (state/resize! 25 25)
