@@ -1,6 +1,6 @@
 # Release notes for the Clojure SDK
 
-## 2026-10-25 - RC13
+## 2026-11-02 - RC13
 ### Fix
 - An exception thrown while sending HTTP headers in the ring adapter would could
   mean opening output streams that aren't closed (think Brotli write profile).
@@ -11,6 +11,14 @@
   these will throw, the underlying OS (provided by the server) is already closed
   after the first IOException. With this fix we discard the second IOException,
   it is just a consequence of the first, the client just disconnected.
+
+## Changed
+- The CDN link in the api now point to D* v1.0.4
+- updated the dependencies of the libraries
+
+## Added
+- Added links CDN links to the newest D* + Rocket bundle
+- `sse-query` function to make SSE QUERY action (added in D* v1.0.4)
 
 ## 2026-10-19 - RC12
 ### Fix

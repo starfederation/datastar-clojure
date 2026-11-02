@@ -1,11 +1,11 @@
 {:paths ["src/main"]
- :deps {metosin/malli                       {:mvn/version "0.20.1"}
+ :deps {metosin/malli                       {:mvn/version "0.20.3"}
         dev.data-star.clojure/sdk           {:mvn/version "1.0.0-RC12"}
         dev.data-star.clojure/ring          {:mvn/version "1.0.0-RC12"}
         dev.data-star.clojure/malli-schemas {:mvn/version "1.0.0-RC12"}}
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.13"
-                                                         :git/sha "ae52edf"}
-                          slipset/deps-deploy {:mvn/version "0.2.3"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.14"
+                                                         :git/sha "1176afd"}
+                          slipset/deps-deploy {:mvn/version "0.2.5"}}
                    :ns-default build}
            :neil  {:project {:name    dev.data-star.clojure/ring-malli-schemas
                              :version "1.0.0-RC12"
