@@ -4,5 +4,5 @@
                                 slipset/deps-deploy           {:mvn/version "0.2.5"}}
                    :ns-default build}
            :neil  {:project {:name    dev.data-star.clojure/sdk
-                             :version "1.0.0-RC12"
+                             :version "1.0.0-RC13"
                              :description "Datastar SDK for Clojure"}}}}

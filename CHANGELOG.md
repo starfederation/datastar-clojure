@@ -2,9 +2,9 @@
 
 ## 2026-11-02 - RC13
 ### Fix
-- An exception thrown while sending HTTP headers in the ring adapter would could
-  mean opening output streams that aren't closed (think Brotli write profile).
-  We now send headers before doing anything else.
+- Fixing issue #42: An exception thrown while sending HTTP headers in the ring
+  adapter would could mean opening output streams that aren't closed (think
+  Brotli write profile). We now send headers before doing anything else.
 - Fixing issue #41: The SSE generator from the ring adapter detects a client
   disconnecting when an IOException is thrown sending a patch. When it does,
   it closes output streams created by the write profile used. Right now, closing

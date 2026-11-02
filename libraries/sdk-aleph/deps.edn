@@ -1,5 +1,5 @@
 {:paths ["src/main"]
- :deps {dev.data-star.clojure/sdk {:mvn/version "1.0.0-RC12"}
+ :deps {dev.data-star.clojure/sdk {:mvn/version "1.0.0-RC13"}
         aleph/aleph {:mvn/version "0.9.11"}}
 
  :aliases {:build {:deps       {io.github.clojure/tools.build {:git/tag "v0.10.14"
@@ -7,5 +7,5 @@
                                 slipset/deps-deploy           {:mvn/version "0.2.5"}}
                    :ns-default build}
            :neil  {:project {:name    dev.data-star.clojure/aleph
-                             :version "1.0.0-RC12"
+                             :version "1.0.0-RC13"
                              :description "Aleph adapter for the Datastar SDK"}}}}
